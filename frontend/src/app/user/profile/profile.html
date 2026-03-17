@@ -1,0 +1,12 @@
+<div class="container mt-5 col-md-4">
+
+<h3>Profile</h3>
+
+<input class="form-control mb-2" name="username" [(ngModel)]="user.username">
+<input class="form-control mb-2" name="email" [(ngModel)]="user.email">
+<input class="form-control mb-2" name="address" [(ngModel)]="user.address">
+<input class="form-control mb-2" name="phone" [(ngModel)]="user.phone">
+
+<button class="btn btn-primary w-100" (click)="update()">Update</button>
+
+</div>
