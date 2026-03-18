@@ -52,7 +52,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ProductDTO getById(@PathVariable Long id) {
-        return service.getById(id); // ✅ no exception
+        return service.getById(id); 
     
     }
 }
