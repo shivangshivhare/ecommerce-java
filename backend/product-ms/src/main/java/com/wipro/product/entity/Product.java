@@ -1,7 +1,9 @@
 package com.wipro.product.entity;
 import jakarta.persistence.*;
+@Entity
+@Table(name = "product") 
 public class Product {
-
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -12,6 +14,14 @@ public class Product {
     private String uom;
     private Integer quantity;
     private String description;
+    @Column(length = 1000)
+    private String imageUrl;
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 	public Long getId() {
 		return id;
 	}

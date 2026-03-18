@@ -2,7 +2,7 @@
   <div class="card shadow-lg p-4" style="width: 500px; border-radius: 12px;">
 
     <h3 class="text-center mb-3">Create Account</h3>
-    <p class="text-center text-muted mb-4">Register to get started</p>
+    <p class="text-center text-muted mb-4">Register to start shopping with us!</p>
 
     <form (ngSubmit)="register()">
 
@@ -53,12 +53,14 @@
       <button class="btn btn-success w-100 mb-3">Register</button>
 
       <div class="text-center">
-        <small>
-          Already have an account?
-          <a routerLink="/login" class="text-decoration-none">Login</a>
-        </small>
-      </div>
-
+  <small>Already have an account?</small><br>
+  <button 
+    class="btn btn-outline-primary btn-sm mt-2"
+    (click)="goToLogin()"
+  >
+    Login
+  </button>
+</div>
     </form>
 
   </div>

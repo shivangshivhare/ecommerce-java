@@ -1,0 +1,83 @@
+<div class="container">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Product List</h3>
+
+    <div class="d-flex align-items-center gap-2">
+      <button (click)="add()" class="btn btn-primary btn-sm">Add Product</button>
+      <span class="badge bg-dark px-3 py-2" (click)="logout()" style="cursor:pointer">
+        {{ username }}
+      </span>
+    </div>
+  </div>
+
+  <div class="row g-2 mb-3">
+    <div class="col">
+      <input 
+        type="text" 
+        class="form-control form-control-sm"
+        placeholder="Search category / description / price"
+        [(ngModel)]="searchText"
+      >
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-outline-primary btn-sm" (click)="search()">Search</button>
+    </div>
+  </div>
+
+  <div *ngIf="products.length > 0; else noData">
+
+    <div 
+      class="card mb-2 border-0 shadow-sm"
+      *ngFor="let p of products; trackBy: trackById"
+    >
+      <div class="card-body py-2 px-3">
+
+        <div class="d-flex justify-content-between align-items-start">
+
+          <div class="d-flex align-items-start gap-3">
+
+            <img 
+              [src]="p.imageUrl || 'https://via.placeholder.com/80'"
+              class="rounded"
+              style="width:75px; height:75px; object-fit:cover;"
+            >
+<div class="small d-flex flex-wrap align-items-center gap-3">
+
+  <div><strong>Product Name:</strong> {{ p.name }}</div>
+
+  <div><strong>Category:</strong> {{ p.category }}</div>
+
+  <div><strong>ID:</strong> {{ p.id }}</div>
+
+  <div><strong>Description:</strong> {{ p.description }}</div>
+
+  <div class="fw-semibold">
+    <strong>Price:</strong> ₹ {{ p.price }}
+  </div>
+
+</div>
+
+          </div>
+
+          <div class="d-flex flex-column gap-1">
+            <button (click)="edit(p.id)" class="btn btn-outline-warning btn-sm">Edit</button>
+            <button (click)="delete(p.id)" class="btn btn-outline-danger btn-sm">Delete</button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template #noData>
+    <p class="text-center text-muted">No products available</p>
+  </ng-template>
+
+  <div class="text-center mt-3">
+    <button class="btn btn-outline-secondary btn-sm">Page</button>
+  </div>
+
+</div>

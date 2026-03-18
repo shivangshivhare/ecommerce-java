@@ -1,0 +1,111 @@
+<div class="container d-flex justify-content-center mt-5">
+
+  <div class="border p-4" style="width: 600px;">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h5 class="mb-0">Edit Product</h5>
+      <span class="badge bg-primary rounded-pill px-4 py-2"
+            (click)="logout()" style="cursor:pointer">
+        {{ username }}
+      </span>
+    </div>
+
+    <form #f="ngForm">
+
+      <div class="row mb-2">
+        <div class="col-4 text-end">
+          <label>Product Name :</label>
+        </div>
+        <div class="col-5">
+          <input type="text" class="form-control form-control-sm"
+                 [(ngModel)]="product.name" name="name" required #name="ngModel">
+          <small class="text-danger" *ngIf="name.invalid && name.touched">
+            Required
+          </small>
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-4 text-end">
+          <label>Product Category :</label>
+        </div>
+        <div class="col-5">
+          <input type="text" class="form-control form-control-sm"
+                 [(ngModel)]="product.category" name="category" required #cat="ngModel">
+          <small class="text-danger" *ngIf="cat.invalid && cat.touched">
+            Required
+          </small>
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-4 text-end">
+          <label>Price :</label>
+        </div>
+        <div class="col-5">
+          <input type="number" class="form-control form-control-sm"
+                 [(ngModel)]="product.price" name="price" required min="1" #price="ngModel">
+          <small class="text-danger" *ngIf="price.invalid && price.touched">
+            Invalid price
+          </small>
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-4 text-end">
+          <label>UOM :</label>
+        </div>
+        <div class="col-5">
+          <input type="text" class="form-control form-control-sm"
+                 [(ngModel)]="product.uom" name="uom" required #uom="ngModel">
+          <small class="text-danger" *ngIf="uom.invalid && uom.touched">
+            Required
+          </small>
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-4 text-end">
+          <label>QTY :</label>
+        </div>
+        <div class="col-5">
+          <input type="number" class="form-control form-control-sm"
+                 [(ngModel)]="product.quantity" name="quantity" required min="1" #qty="ngModel">
+          <small class="text-danger" *ngIf="qty.invalid && qty.touched">
+            Invalid quantity
+          </small>
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-4 text-end">
+          <label>Description :</label>
+        </div>
+        <div class="col-5">
+          <input type="text" class="form-control form-control-sm"
+                 [(ngModel)]="product.description" name="description">
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-4 text-end">
+          <label>Image URL :</label>
+        </div>
+        <div class="col-5">
+          <input type="text" class="form-control form-control-sm"
+                 [(ngModel)]="product.imageUrl" name="imageUrl">
+        </div>
+      </div>
+
+      <div class="text-center">
+        <button class="btn btn-primary px-5"
+                (click)="update()" [disabled]="f.invalid">
+          Update
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

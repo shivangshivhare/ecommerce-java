@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user'; 
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
@@ -14,11 +15,12 @@ export class Logincomponent {
   email = "";
   password = "";
   remember = false;
+  errorMessage = "";
 
   constructor(private service: UserService, private router: Router) {}
 
   login() {
-
+ this.errorMessage = "";
     const data = {
       email: this.email, 
       password: this.password
@@ -26,12 +28,9 @@ export class Logincomponent {
 
     this.service.login(data).subscribe((res: any) => {
 
-      if (this.remember) {
-        localStorage.setItem("user", JSON.stringify(res));
-      } else {
-        sessionStorage.setItem("user", JSON.stringify(res));
-      }
+      localStorage.setItem("user", JSON.stringify(res));
 
+  
       if (res.role === "ADMIN") {
         this.router.navigate(['/admin/products']);
       } else {
@@ -39,15 +38,15 @@ export class Logincomponent {
       }
 
     }, err => {
-      alert("Invalid credentials"); 
+      this.errorMessage = "Login unsuccessful: email or password is wrong";
     });
   }
+
 
   goToRegister() {
     this.router.navigate(['/register']);
   }
 
   forgotPassword() {
-    alert("Feature not implemented yet");
   }
 }

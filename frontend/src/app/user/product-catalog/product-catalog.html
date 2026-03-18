@@ -1,0 +1,88 @@
+<div class="container-fluid p-0">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+
+    <a class="navbar-brand">E-Commerce</a>
+
+    <!-- SEARCH -->
+    <form class="d-flex mx-auto" style="width: 40%;">
+      <input 
+        class="form-control me-2"
+        type="search"
+        placeholder="Search products..."
+        [(ngModel)]="searchText"
+        name="search"
+      >
+      <button class="btn btn-outline-light" type="button" (click)="search()">
+        Search
+      </button>
+    </form>
+
+    <!-- RIGHT SIDE -->
+    <div class="d-flex align-items-center gap-3">
+
+      <button class="btn btn-outline-light btn-sm" (click)="goToOrders()">
+        Orders
+      </button>
+
+      <button class="btn btn-warning btn-sm" (click)="goToCart()">
+        Cart ({{ cartCount }})
+      </button>
+
+      <div class="d-flex align-items-center text-white"
+           style="cursor:pointer"
+           (click)="goToProfile()">
+
+        <span class="me-1">{{ username }}</span>
+        <span class="bg-light text-dark rounded-circle px-2">👤</span>
+
+      </div>
+
+    </div>
+
+  </nav>
+
+  <!-- CONTENT -->
+  <div class="container mt-4">
+
+    <h5 class="mb-3">Product Catalogue</h5>
+
+    <div class="row">
+
+      <div class="col-md-4 mb-3" *ngFor="let p of products">
+
+        <div class="card h-100 shadow-sm">
+
+          <img 
+            [src]="p.imageUrl || 'https://via.placeholder.com/200'"
+            class="card-img-top"
+            style="height:180px; object-fit:cover;"
+          >
+
+          <div class="card-body text-center">
+
+            <h6 class="mb-1">{{ p.name }}</h6>
+            <p class="text-muted small mb-1">{{ p.category }}</p>
+            <p class="fw-bold mb-2">₹ {{ p.price }}</p>
+
+            <button class="btn btn-warning btn-sm w-100"
+                    (click)="addToCart(p)">
+              Add to Cart
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div *ngIf="products.length === 0" class="text-center text-muted">
+      No products found
+    </div>
+
+  </div>
+
+</div>

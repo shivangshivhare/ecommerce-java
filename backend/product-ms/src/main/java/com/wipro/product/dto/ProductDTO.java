@@ -8,6 +8,13 @@ public class ProductDTO {
 	    private String uom;
 	    private Integer quantity;
 	    private String description;
+	    private String imageUrl;
+		public String getImageUrl() {
+			return imageUrl;
+		}
+		public void setImageUrl(String imageUrl) {
+			this.imageUrl = imageUrl;
+		}
 		public Long getId() {
 			return id;
 		}

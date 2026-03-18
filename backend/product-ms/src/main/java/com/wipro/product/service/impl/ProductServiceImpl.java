@@ -40,6 +40,7 @@ public class ProductServiceImpl implements ProductService {
             product.setUom(dto.getUom());
             product.setQuantity(dto.getQuantity());
             product.setDescription(dto.getDescription());
+            product.setImageUrl(dto.getImageUrl());
 
             return mapToDTO(repo.save(product));
         }
@@ -85,8 +86,7 @@ public class ProductServiceImpl implements ProductService {
         return null;
     }
 
-    // MAPPING
-
+    
     private Product mapToEntity(ProductDTO dto) {
 
         Product p = new Product();
@@ -98,6 +98,7 @@ public class ProductServiceImpl implements ProductService {
         p.setUom(dto.getUom());
         p.setQuantity(dto.getQuantity());
         p.setDescription(dto.getDescription());
+        p.setImageUrl(dto.getImageUrl());
 
         return p;
     }
@@ -113,7 +114,7 @@ public class ProductServiceImpl implements ProductService {
         dto.setUom(p.getUom());
         dto.setQuantity(p.getQuantity());
         dto.setDescription(p.getDescription());
-
+        dto.setImageUrl(p.getImageUrl());
         return dto;
     }
 }

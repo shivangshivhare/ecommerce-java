@@ -4,7 +4,11 @@
 
     <h3 class="text-center mb-4">Login</h3>
 
-    <form (ngSubmit)="login()">
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <form (ngSubmit)="login()" #loginForm="ngForm">
 
       <div class="form-group mb-3">
         <label for="email">Email address</label>
@@ -15,7 +19,13 @@
           name="email"
           [(ngModel)]="email"
           placeholder="Enter email"
+          required
+          #emailRef="ngModel"
         >
+
+        <small class="text-danger" *ngIf="emailRef.invalid && emailRef.touched">
+          Email is required
+        </small>
       </div>
 
       <div class="form-group mb-3">
@@ -27,7 +37,13 @@
           name="password"
           [(ngModel)]="password"
           placeholder="Password"
+          required
+          minlength="4"
+          #passwordRef="ngModel"
         >
+        <small class="text-danger" *ngIf="passwordRef.invalid && passwordRef.touched">
+          Password is required (min 4 chars)
+        </small>
       </div>
 
       <div class="d-flex justify-content-between align-items-center mb-3">
@@ -43,30 +59,29 @@
         </a>
       </div>
 
-      <button type="submit" class="btn btn-primary w-100 mb-3">
+      <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="loginForm.invalid">
         Login
       </button>
-
 
       <div class="text-center mb-3">
         <span class="text-muted">or sign in with</span>
       </div>
 
-     <div class="d-flex justify-content-center gap-3 mb-3">
+      <div class="d-flex justify-content-center gap-3 mb-3">
 
-  <button type="button" class="btn btn-outline-danger">
-    <i class="ri-google-fill"></i>
-  </button>
+        <button type="button" class="btn btn-outline-danger">
+          <i class="ri-google-fill"></i>
+        </button>
 
-  <button type="button" class="btn btn-outline-primary">
-    <i class="ri-facebook-box-fill"></i>
-  </button>
+        <button type="button" class="btn btn-outline-primary">
+          <i class="ri-facebook-box-fill"></i>
+        </button>
 
-  <button type="button" class="btn btn-outline-dark">
-    <i class="ri-instagram-fill"></i>
-  </button>
+        <button type="button" class="btn btn-outline-dark">
+          <i class="ri-instagram-fill"></i>
+        </button>
 
-</div>
+      </div>
 
       <div class="text-center">
         <span>Don't have an account?</span>

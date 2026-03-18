@@ -1,8 +1,10 @@
 package com.wipro.product.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.wipro.product.dto.ProductDTO;
@@ -27,14 +29,22 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
 
         boolean deleted = service.delete(id);
 
-        if (deleted) return "Deleted";
-        else throw new RuntimeException("Not found");
+        if (deleted) {
+            return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "Product deleted successfully"
+            ));
+        } else {
+            return ResponseEntity.status(404).body(Map.of(
+                "success", false,
+                "message", "Product not found"
+            ));
+        }
     }
-
     @GetMapping
     public List<ProductDTO> getAll() {
         return service.getAll();
@@ -42,11 +52,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ProductDTO getById(@PathVariable Long id) {
-
-        ProductDTO dto = service.getById(id);
-
-        if (dto == null) throw new RuntimeException("Not found");
-
-        return dto;
+        return service.getById(id); // ✅ no exception
+    
     }
 }
