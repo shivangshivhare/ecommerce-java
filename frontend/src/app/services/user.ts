@@ -7,7 +7,7 @@ import { User } from '../interface/user';
 })
 export class UserService {
 
-  private baseUrl = "http://localhost:8081/user";
+  private baseUrl = "http://localhost:8080/user";
 
   constructor(private http: HttpClient) {}
 
@@ -18,9 +18,9 @@ export class UserService {
   login(data: any) {
     return this.http.post<User>(`${this.baseUrl}/login`, data);
   }
-  update(user: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/${user.id}`, user);
-  }
+ update(user: any): Observable<any> {
+  return this.http.put(`${this.baseUrl}`, user);
+}
 
 
   getUser(id: number): Observable<any> {

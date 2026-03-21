@@ -1,12 +1,58 @@
 <div class="container mt-5 col-md-4">
 
-<h3>Profile</h3>
+  <h3 class="mb-3">Update Profile</h3>
 
-<input class="form-control mb-2" name="username" [(ngModel)]="user.username">
-<input class="form-control mb-2" name="email" [(ngModel)]="user.email">
-<input class="form-control mb-2" name="address" [(ngModel)]="user.address">
-<input class="form-control mb-2" name="phone" [(ngModel)]="user.phone">
 
-<button class="btn btn-primary w-100" (click)="update()">Update</button>
+  <input class="form-control mb-2"
+         placeholder="Username"
+         [(ngModel)]="user.username">
+
+
+  <input class="form-control mb-2"
+         placeholder="First Name"
+         [(ngModel)]="user.firstName">
+
+  <input class="form-control mb-2"
+         placeholder="Last Name"
+         [(ngModel)]="user.lastName">
+
+  <input class="form-control mb-2"
+         placeholder="Address"
+         [(ngModel)]="user.address">
+
+
+  <input class="form-control mb-2"
+         placeholder="Phone"
+         [(ngModel)]="user.phoneNumber">
+
+
+  <input type="password"
+         class="form-control mb-2"
+         placeholder="Password"
+         [(ngModel)]="user.password">
+
+  
+  <input type="password"
+         class="form-control mb-2"
+         placeholder="Confirm Password"
+         [(ngModel)]="confirmPassword">
+
+
+  <div class="text-danger mb-2" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+
+  <div class="d-flex gap-2">
+
+    <button class="btn btn-primary w-100" (click)="update()">
+      Save
+    </button>
+
+    <button class="btn btn-secondary w-100" (click)="goHome()">
+      Back
+    </button>
+
+  </div>
 
 </div>

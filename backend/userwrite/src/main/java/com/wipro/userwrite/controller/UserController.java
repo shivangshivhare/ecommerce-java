@@ -1,5 +1,7 @@
 package com.wipro.userwrite.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.wipro.userwrite.entity.User;
@@ -9,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = "*")
 public class UserController {
 
     private final UserService service;
@@ -18,27 +19,27 @@ public class UserController {
         this.service = service;
     }
 
-    // REGISTER
+   
     @PostMapping
     public User register(@RequestBody User user) {
         user.setRole("CUSTOMER");
         return service.save(user);
     }
 
-    // LOGIN
+ 
     @PostMapping("/login")
-    public User login(@RequestBody User user) {
+    public ResponseEntity<?> login(@RequestBody User user) {
 
         User loggedUser = service.login(user.getEmail(), user.getPassword());
 
         if (loggedUser == null) {
-            throw new RuntimeException("Invalid credentials");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid credentials");
         }
 
-        return loggedUser;
+        return ResponseEntity.ok(loggedUser);
     }
-
-    // UPDATE
+    
     @PutMapping
     public User update(@RequestBody User user) {
 

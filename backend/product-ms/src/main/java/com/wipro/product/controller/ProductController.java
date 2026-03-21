@@ -12,7 +12,6 @@ import com.wipro.product.service.ProductService;
 
 @RestController
 @RequestMapping("/product")
-@CrossOrigin("*")
 public class ProductController {
 
     @Autowired

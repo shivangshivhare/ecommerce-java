@@ -13,9 +13,9 @@ import{ ChangeDetectorRef } from '@angular/core';
   styleUrl: './edit-product.css',
 })
 export class EditProductComponent implements OnInit {
-
+ categories: string[] = ['Kitchen', 'Skincare', 'Electronics', 'Clothing'];
   product: any = {};
-  username: string = 'Admin';
+  username: string = 'Shivang Shivhare';
   constructor(
     private route: ActivatedRoute,
     private service: ProductService,
@@ -31,7 +31,9 @@ export class EditProductComponent implements OnInit {
       this.cdr.detectChanges();
     });
   }
-
+goBack() {
+  this.router.navigate(['/admin/products']); 
+}
   update() {
     this.service.update(this.product).subscribe(() => {
       this.router.navigate(['/admin/products']);
@@ -41,4 +43,5 @@ logout() {
   localStorage.clear();
   this.router.navigate(['/login']);
 }
+
 }

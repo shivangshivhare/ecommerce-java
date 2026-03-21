@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.wipro.userwrite.entity.User;
 import com.wipro.userwrite.repo.UserRepository;
 import com.wipro.userwrite.service.UserService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker; 
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -17,7 +18,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository repo;
 
-    // REGISTER USER
+    private static final String CB_NAME = "userServiceCB";
     @Override
     public User save(User user) {
 
@@ -25,7 +26,7 @@ public class UserServiceImpl implements UserService {
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
         user.setPassword(hashedPassword);
 
-        // default role
+     
         if (user.getRole() == null) {
             user.setRole("CUSTOMER");
         }
@@ -33,7 +34,7 @@ public class UserServiceImpl implements UserService {
         return repo.save(user);
     }
 
-    // LOGIN
+    
     @Override
     public User login(String email, String password) {
 
@@ -42,16 +43,16 @@ public class UserServiceImpl implements UserService {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
 
-            // check password
+            
             if (BCrypt.checkpw(password, user.getPassword())) {
                 return user;
             }
         }
 
-        return null; // invalid login
+        return null; 
     }
 
-    // UPDATE USER
+   
     @Override
     public User update(User user) {
 
@@ -65,29 +66,46 @@ public class UserServiceImpl implements UserService {
             dbUser.setLastName(user.getLastName());
             dbUser.setPhoneNumber(user.getPhoneNumber());
             dbUser.setAddress(user.getAddress());
-
+            dbUser.setRole(user.getRole());
             return repo.save(dbUser);
         }
 
         return null;
     }
-
-    // GET USER BY ID
     @Override
+    @CircuitBreaker(name = CB_NAME, fallbackMethod = "fallbackUser")
     public User getById(Long id) {
 
-        Optional<User> user = repo.findById(id);
+        if (id == 99) {
+            throw new RuntimeException("Service Down");
+        }
 
-        return user.orElse(null);
+        return repo.findById(id).orElse(null);
     }
 
-    // GET ALL USERS
+ 
+    public User fallbackUser(Long id, Exception ex) {
+
+        User user = new User();
+
+        user.setId(id);
+        user.setUsername("Default User");
+        user.setEmail("fallback@gmail.com");
+        user.setFirstName("Service");
+        user.setLastName("Unavailable");
+        user.setRole("GUEST");
+
+        return user;
+    }
+
+   
+   
     @Override
     public List<User> getAll() {
         return repo.findAll();
     }
 
-    // DELETE USER
+   
     @Override
     public boolean deleteById(Long id) {
 

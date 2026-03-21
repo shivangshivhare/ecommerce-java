@@ -1,0 +1,21 @@
+.product-img {
+  max-height: 220px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.product-img:hover {
+  transform: scale(1.05);
+}
+
+.desc {
+  line-height: 1.6;
+}
+
+.card {
+  border-radius: 10px;
+}
+
+.btn {
+  border-radius: 6px;
+}

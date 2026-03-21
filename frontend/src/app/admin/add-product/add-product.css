@@ -1,0 +1,42 @@
+.form-card {
+  width: 700px;
+  border-radius: 12px;
+  padding: 25px;
+  border: none;
+}
+
+.form-control, .form-select {
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.form-control:focus, .form-select:focus {
+  box-shadow: 0 0 0 2px rgba(78, 115, 223, 0.2);
+  border-color: #4e73df;
+}
+
+.btn-gradient {
+  background: linear-gradient(135deg, #4e73df, #224abe);
+  color: white;
+  border: none;
+}
+
+.btn-gradient:hover {
+  opacity: 0.9;
+}
+
+.user-badge {
+  background: #4e73df;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.preview-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}

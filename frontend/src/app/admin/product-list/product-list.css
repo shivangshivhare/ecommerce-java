@@ -1,0 +1,89 @@
+/* Gradient Button */
+.btn-gradient {
+  background: linear-gradient(135deg, #4e73df, #224abe);
+  color: white;
+  border: none;
+}
+
+.btn-gradient:hover {
+  opacity: 0.9;
+}
+
+/* Sort Button */
+.btn-sort {
+  background: #f1f3f5;
+  border: none;
+}
+
+.btn-sort:hover {
+  background: #dee2e6;
+}
+
+/* Table Styling */
+.custom-table {
+  border-radius: 10px;
+  overflow: hidden;
+  background: white;
+}
+
+/* Header */
+.custom-table thead {
+  background: linear-gradient(135deg, #4e73df, #224abe);
+  color: white;
+}
+
+/* Hover effect */
+.custom-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.custom-table tbody tr:hover {
+  background: #f8f9fc;
+  transform: scale(1.005);
+}
+
+/* Product Image */
+.table-img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Truncate Description */
+.text-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* User Badge */
+.user-badge {
+  background: #4e73df;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Dropdown */
+.dropdown-menu-custom {
+  position: absolute;
+  right: 0;
+  top: 40px;
+  background: white;
+  border-radius: 8px;
+  min-width: 120px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: #f8f9fa;
+}

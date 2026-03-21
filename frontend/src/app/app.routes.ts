@@ -6,6 +6,9 @@ import { ProductCatalogComponent } from './user/product-catalog/product-catalog'
 import { EditProductComponent } from './admin/edit-product/edit-product';
 import { AddProductComponent } from './admin/add-product/add-product';
 import { ProductListComponent } from './admin/product-list/product-list';
+import { CartComponent } from './user/cart/cart';
+import { OrderHistoryComponent } from './user/orderhistory/orderhistory';
+import { ProductDetailComponent } from './user/product-details/product-details';
 
 export const routes: Routes = [
   { path: '', component: Logincomponent },
@@ -16,6 +19,8 @@ export const routes: Routes = [
   { path: 'admin/products', component: ProductListComponent },
   { path: 'admin/add-product', component: AddProductComponent },
   { path: 'admin/edit-product/:id', component: EditProductComponent },
-
-  { path: 'catalog', component: ProductCatalogComponent }
+  { path: 'cart', component: CartComponent },
+  { path: 'catalog', component: ProductCatalogComponent },
+  { path: 'orders', component: OrderHistoryComponent},
+  { path: 'product/:id', component: ProductDetailComponent}
 ];

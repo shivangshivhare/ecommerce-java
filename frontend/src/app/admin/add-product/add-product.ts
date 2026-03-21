@@ -23,6 +23,9 @@ export class  AddProductComponent {
     });
   });
 }
+goBack() {
+  this.router.navigate(['/admin/products']); 
+}
 logout() {
   localStorage.clear();
   this.router.navigate(['/login']);

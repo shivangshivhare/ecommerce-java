@@ -27,10 +27,11 @@ export class Logincomponent {
     };
 
     this.service.login(data).subscribe((res: any) => {
-
+      console.log("LOGIN RESPONSE:", res);
       localStorage.setItem("user", JSON.stringify(res));
 
-  
+      localStorage.setItem("userId", res.id);
+      localStorage.setItem("username", res.firstName);
       if (res.role === "ADMIN") {
         this.router.navigate(['/admin/products']);
       } else {

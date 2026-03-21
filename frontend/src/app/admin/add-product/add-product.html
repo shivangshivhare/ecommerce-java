@@ -1,89 +1,97 @@
 <div class="container d-flex justify-content-center mt-5">
 
-  <div class="border p-4" style="width: 600px;">
+  <div class="card shadow" style="width: 650px;">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h5 class="mb-0">Add Product</h5>
-      <span class="badge bg-primary rounded-pill px-4 py-2">Username</span>
+    <div class="card-body">
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="mb-0">Add Product</h5>
+        <span class="badge bg-primary rounded-pill px-3 py-2">
+          Shivang Shivhare
+        </span>
+      </div>
+
+      <form #f="ngForm">
+
+        <div class="row g-3">
+
+          <div class="col-md-6">
+            <label class="form-label">Product Name</label>
+            <input type="text" class="form-control"
+                   [(ngModel)]="product.name" name="name" required #name="ngModel">
+            <small class="text-danger" *ngIf="name.invalid && name.touched">Required</small>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Category</label>
+            <input type="text" class="form-control"
+                   [(ngModel)]="product.category" name="category" required #cat="ngModel">
+            <small class="text-danger" *ngIf="cat.invalid && cat.touched">Required</small>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Price</label>
+            <input type="number" class="form-control"
+                   [(ngModel)]="product.price" name="price" required min="1" #price="ngModel">
+            <small class="text-danger" *ngIf="price.invalid && price.touched">Invalid price</small>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">UOM</label>
+            <input type="text" class="form-control"
+                   [(ngModel)]="product.uom" name="uom" required #uom="ngModel">
+            <small class="text-danger" *ngIf="uom.invalid && uom.touched">Required</small>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Quantity</label>
+            <input type="number" class="form-control"
+                   [(ngModel)]="product.quantity" name="quantity" required min="1" #qty="ngModel">
+            <small class="text-danger" *ngIf="qty.invalid && qty.touched">Invalid quantity</small>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">Description</label>
+            <textarea class="form-control"
+                      rows="2"
+                      [(ngModel)]="product.description"
+                      name="description"></textarea>
+          </div>
+
+          <div class="col-md-8">
+            <label class="form-label">Image URL</label>
+            <input type="text" class="form-control"
+                   [(ngModel)]="product.imageUrl" name="imageUrl">
+          </div>
+
+          <div class="col-md-4 text-center">
+            <label class="form-label">Preview</label><br>
+            <img 
+              [src]="product.imageUrl || 'https://via.placeholder.com/100'"
+              class="img-fluid rounded border"
+              style="max-height:100px; object-fit:cover;"
+            >
+          </div>
+
+        </div>
+
+        <div class="text-center mt-4 d-flex justify-content-center gap-3">
+
+          <button type="button" class="btn btn-outline-secondary px-4"
+                  (click)="goBack()">
+            Go Back
+          </button>
+
+          <button type="button" class="btn btn-primary px-5"
+                  (click)="save()" [disabled]="f.invalid">
+            Save
+          </button>
+
+        </div>
+
+      </form>
+
     </div>
-
-    <form>
-
-      <div class="row mb-3">
-        <div class="col-4 text-end">
-          <label class="form-label">Product Name :</label>
-        </div>
-        <div class="col-5">
-          <input type="text" class="form-control form-control-sm"
-                 [(ngModel)]="product.name" name="name">
-        </div>
-      </div>
-
-      <div class="row mb-3">
-        <div class="col-4 text-end">
-          <label class="form-label">Product Category :</label>
-        </div>
-        <div class="col-5">
-          <input type="text" class="form-control form-control-sm"
-                 [(ngModel)]="product.category" name="category">
-        </div>
-      </div>
-
-      <div class="row mb-3">
-        <div class="col-4 text-end">
-          <label class="form-label">Price :</label>
-        </div>
-        <div class="col-5">
-          <input type="number" class="form-control form-control-sm"
-                 [(ngModel)]="product.price" name="price">
-        </div>
-      </div>
-
-      <div class="row mb-3">
-        <div class="col-4 text-end">
-          <label class="form-label">UOM :</label>
-        </div>
-        <div class="col-5">
-          <input type="text" class="form-control form-control-sm"
-                 [(ngModel)]="product.uom" name="uom">
-        </div>
-      </div>
-
-      <div class="row mb-3">
-        <div class="col-4 text-end">
-          <label class="form-label">QTY :</label>
-        </div>
-        <div class="col-5">
-          <input type="number" class="form-control form-control-sm"
-                 [(ngModel)]="product.quantity" name="quantity">
-        </div>
-      </div>
-
-      <div class="row mb-3">
-        <div class="col-4 text-end">
-          <label class="form-label">Description :</label>
-        </div>
-        <div class="col-5">
-          <input type="text" class="form-control form-control-sm"
-                 [(ngModel)]="product.description" name="description">
-        </div>
-      </div>
-
-      <div class="row mb-4">
-        <div class="col-4 text-end">
-          <label class="form-label">Image URL :</label>
-        </div>
-        <div class="col-5">
-          <input type="text" class="form-control form-control-sm"
-                 [(ngModel)]="product.imageUrl" name="imageUrl">
-        </div>
-      </div>
-
-      <div class="text-center">
-        <button class="btn btn-primary px-5" (click)="save()">Save</button>
-      </div>
-
-    </form>
 
   </div>
 

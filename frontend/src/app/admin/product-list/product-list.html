@@ -1,83 +1,175 @@
-<div class="container">
+<div class="container mt-4">
 
+  <!-- HEADER -->
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h3 class="mb-0">Product List</h3>
 
-    <div class="d-flex align-items-center gap-2">
-      <button (click)="add()" class="btn btn-primary btn-sm">Add Product</button>
-      <span class="badge bg-dark px-3 py-2" (click)="logout()" style="cursor:pointer">
-        {{ username }}
-      </span>
+    <button class="btn btn-gradient btn-sm" (click)="add()">+ Add Product</button>
+
+    <div class="position-relative">
+
+      <div class="user-badge" (click)="toggleDropdown()">
+        Shivang Shivhare ▼
+      </div>
+
+      <div *ngIf="dropdownOpen" class="dropdown-menu-custom">
+        <div class="dropdown-item text-danger" (click)="logout()">Logout</div>
+      </div>
+
     </div>
+
   </div>
 
-  <div class="row g-2 mb-3">
-    <div class="col">
+  <!-- SEARCH -->
+  <div class="card p-3 shadow-sm mb-3">
+
+    <div class="d-flex gap-2 flex-wrap">
+
+      <select class="form-select form-select-sm w-auto" [(ngModel)]="searchCategory">
+        <option value="">All Categories</option>
+        <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+      </select>
+
       <input 
-        type="text" 
-        class="form-control form-control-sm"
-        placeholder="Search category / description / price"
+        type="text"
+        class="form-control form-control-sm w-50"
+        placeholder="Search product..."
         [(ngModel)]="searchText"
       >
+
+      <button class="btn btn-gradient btn-sm" (click)="search()">Search</button>
+
     </div>
-    <div class="col-auto">
-      <button class="btn btn-outline-primary btn-sm" (click)="search()">Search</button>
-    </div>
+
   </div>
 
-  <div *ngIf="products.length > 0; else noData">
+  <!-- SORT -->
+  <div class="mb-3">
+    <button class="btn btn-sort btn-sm me-2" (click)="sort('price')">
+      Price {{ sortField === 'price' ? (sortDirection === 'asc' ? '↑' : '↓') : '' }}
+    </button>
 
-    <div 
-      class="card mb-2 border-0 shadow-sm"
-      *ngFor="let p of products; trackBy: trackById"
-    >
-      <div class="card-body py-2 px-3">
+    <button class="btn btn-sort btn-sm" (click)="sort('quantity')">
+      Quantity {{ sortField === 'quantity' ? (sortDirection === 'asc' ? '↑' : '↓') : '' }}
+    </button>
+  </div>
 
-        <div class="d-flex justify-content-between align-items-start">
+  <!-- TABLE -->
+  <div class="table-responsive">
 
-          <div class="d-flex align-items-start gap-3">
+    <table class="table custom-table align-middle text-center">
+
+      <thead>
+        <tr>
+          <th class="text-start">Product</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>UOM</th>
+          <th>Stock</th>
+          <th>Status</th>
+          <th>Description</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+
+      <tbody *ngIf="products.length > 0; else noData">
+
+        <tr *ngFor="let p of paginatedProducts; trackBy: trackById">
+
+          <!-- PRODUCT -->
+          <td class="text-start d-flex align-items-center gap-2">
 
             <img 
-              [src]="p.imageUrl || 'https://via.placeholder.com/80'"
-              class="rounded"
-              style="width:75px; height:75px; object-fit:cover;"
+              [src]="p.imageUrl || 'https://via.placeholder.com/60'"
+              class="table-img"
             >
-<div class="small d-flex flex-wrap align-items-center gap-3">
 
-  <div><strong>Product Name:</strong> {{ p.name }}</div>
+            <span class="fw-semibold">{{ p.name }}</span>
 
-  <div><strong>Category:</strong> {{ p.category }}</div>
+          </td>
 
-  <div><strong>ID:</strong> {{ p.id }}</div>
+          <td>{{ p.category }}</td>
 
-  <div><strong>Description:</strong> {{ p.description }}</div>
+          <td>₹ {{ p.price }}</td>
 
-  <div class="fw-semibold">
-    <strong>Price:</strong> ₹ {{ p.price }}
+          <td>{{ p.uom }}</td>
+
+          <td>
+            <span [ngClass]="p.quantity > 0 ? 'text-success fw-bold' : 'text-danger fw-bold'">
+              {{ p.quantity }}
+            </span>
+          </td>
+
+          <td>
+            <span 
+              class="badge"
+              [ngClass]="p.quantity > 0 ? 'bg-success' : 'bg-danger'"
+            >
+              {{ p.quantity > 0 ? 'In Stock' : 'Out of Stock' }}
+            </span>
+          </td>
+
+          <td class="text-truncate" style="max-width:200px;">
+            {{ p.description }}
+          </td>
+
+          <!-- EDIT -->
+          <td>
+            <button class="btn btn-warning btn-sm" (click)="edit(p.id)">
+              Edit
+            </button>
+          </td>
+
+          <!-- DELETE -->
+          <td>
+
+            <ng-container *ngIf="confirmDeleteId !== p.id">
+              <button class="btn btn-danger btn-sm" (click)="askDelete(p.id)">
+                Delete
+              </button>
+            </ng-container>
+
+            <div *ngIf="confirmDeleteId === p.id" class="d-flex gap-1 justify-content-center">
+              <button class="btn btn-danger btn-sm" (click)="confirmDelete(p.id)">Yes</button>
+              <button class="btn btn-secondary btn-sm" (click)="cancelDelete()">Cancel</button>
+            </div>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
   </div>
 
-</div>
-
-          </div>
-
-          <div class="d-flex flex-column gap-1">
-            <button (click)="edit(p.id)" class="btn btn-outline-warning btn-sm">Edit</button>
-            <button (click)="delete(p.id)" class="btn btn-outline-danger btn-sm">Delete</button>
-          </div>
-
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-
+  <!-- NO DATA -->
   <ng-template #noData>
-    <p class="text-center text-muted">No products available</p>
+    <div class="text-center mt-3 text-muted">
+      No data found
+    </div>
   </ng-template>
 
-  <div class="text-center mt-3">
-    <button class="btn btn-outline-secondary btn-sm">Page</button>
+  <!-- PAGINATION -->
+  <div class="text-center mt-4">
+
+    <button 
+      class="btn btn-outline-primary btn-sm me-2"
+      (click)="page = page - 1"
+      [disabled]="page === 1"
+    >
+      Prev
+    </button>
+
+    <button 
+      class="btn btn-outline-primary btn-sm"
+      (click)="page = page + 1"
+      [disabled]="page * pageSize >= products.length"
+    >
+      Next
+    </button>
+
   </div>
 
 </div>

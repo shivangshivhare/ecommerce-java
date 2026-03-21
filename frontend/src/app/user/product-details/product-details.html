@@ -1,0 +1,167 @@
+<div class="container-fluid p-0">
+
+  <!-- NAVBAR (UNCHANGED) -->
+  <nav class="navbar navbar-dark bg-dark px-3">
+
+    <span class="navbar-brand">Shop With Us</span>
+
+    <div class="d-flex mx-auto" style="width: 50%; gap:10px;">
+
+      <select class="form-select w-25">
+        <option value="">All</option>
+        <option value="Kitchen">Kitchen</option>
+        <option value="Skincare">Skincare</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Laptop">Laptop</option>
+      </select>
+
+      <input class="form-control" placeholder="Search...">
+
+      <button class="btn btn-outline-light">Search</button>
+
+    </div>
+
+    <div class="d-flex align-items-center gap-3">
+
+      <button class="btn btn-outline-light btn-sm" (click)="goToOrders()">
+        Orders
+      </button>
+
+      <button class="btn btn-warning btn-sm" (click)="goToCart()">
+        Cart ({{ cartCount }})
+      </button>
+
+      <div class="text-white">{{ username }}</div>
+
+    </div>
+
+  </nav>
+
+  <!-- MESSAGE -->
+  <div *ngIf="message" class="container mt-3">
+    <div class="alert shadow-sm"
+         [ngClass]="{
+           'alert-success': messageType === 'success',
+           'alert-danger': messageType === 'danger',
+           'alert-info': messageType === 'info'
+         }">
+      {{ message }}
+    </div>
+  </div>
+
+  <!-- PRODUCT DETAILS -->
+  <div class="container mt-4" *ngIf="product">
+
+    <div class="row g-4 align-items-start">
+
+      <!-- IMAGE CARD -->
+      <div class="col-md-4">
+        <div class="card shadow-sm border-0 text-center p-3">
+
+          <img 
+            [src]="product.imageUrl || 'assets/no-image.png'"
+            class="img-fluid product-img">
+
+        </div>
+      </div>
+
+      <!-- DETAILS CARD -->
+      <div class="col-md-8">
+        <div class="card shadow-sm border-0 p-4">
+
+          <h3 class="fw-bold mb-2">{{ product.name }}</h3>
+
+          <p class="text-muted mb-2">{{ product.category }}</p>
+
+          <h2 class="text-success fw-bold mb-3">
+            ₹ {{ product.price }}
+          </h2>
+
+          <p class="text-secondary mb-3 desc">
+            {{ product.description }}
+          </p>
+
+          <hr>
+
+          <div class="mb-2">
+            <span class="fw-bold">Unit:</span> {{ product.uom }}
+          </div>
+
+          <!-- STOCK -->
+          <div class="mb-2 fw-bold">
+            Stock:
+            <span [class.text-success]="product.quantity > 5"
+                  [class.text-warning]="product.quantity <= 5 && product.quantity > 0"
+                  [class.text-danger]="product.quantity === 0">
+
+              {{ product.quantity > 0 ? product.quantity + ' Available' : 'Out of Stock' }}
+
+            </span>
+          </div>
+
+          <!-- LOW STOCK -->
+          <div *ngIf="product.quantity > 0 && product.quantity <= 5"
+               class="text-danger fw-bold mb-2">
+            Only {{ product.quantity }} left!
+          </div>
+
+          <!-- QUANTITY -->
+          <div class="d-flex align-items-center mb-3">
+
+            <label class="fw-bold me-3">Quantity:</label>
+
+            <select class="form-select w-auto"
+                    [(ngModel)]="quantity"
+                    [disabled]="product.quantity === 0">
+
+              <option *ngFor="let q of quantityOptions" [value]="q">
+                {{ q }}
+              </option>
+
+            </select>
+
+          </div>
+
+          <!-- TOTAL -->
+          <div class="fw-bold fs-5 mb-4">
+            Total: ₹ {{ product.price * quantity }}
+          </div>
+
+          <!-- BUTTONS -->
+          <div class="d-flex gap-3 flex-wrap">
+
+            <button *ngIf="!isInCart"
+                    class="btn btn-warning px-4 fw-bold"
+                    (click)="addToCart()"
+                    [disabled]="product.quantity === 0">
+              Add to Cart
+            </button>
+
+            <button *ngIf="isInCart"
+                    class="btn btn-primary px-4 fw-bold"
+                    (click)="updateCart()">
+              Update Cart
+            </button>
+
+            <button *ngIf="isInCart"
+                    class="btn btn-outline-danger px-4 fw-bold"
+                    (click)="removeFromCart()">
+              Remove
+            </button>
+
+            <button class="btn btn-success px-4 fw-bold"
+                    (click)="buyNow()"
+                    [disabled]="product.quantity === 0">
+              Buy Now
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

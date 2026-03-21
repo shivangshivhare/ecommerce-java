@@ -1,0 +1,38 @@
+.user-dropdown {
+  position: relative;
+}
+
+.dropdown-menu-custom {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: white;
+  border-radius: 6px;
+  padding: 8px;
+  min-width: 150px;
+}
+
+.dropdown-menu-custom button {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 6px;
+  text-align: left;
+}
+
+.dropdown-menu-custom button:hover {
+  background: #f1f1f1;
+}
+.card-img-top {
+  background: #f8f9fa;
+}
+.dropdown-item {
+  border: none;
+  background: none;
+  padding: 8px 12px;
+  width: 100%;
+}
+
+.dropdown-item:hover {
+  background-color: #f1f1f1;
+}
