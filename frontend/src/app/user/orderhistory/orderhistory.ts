@@ -32,7 +32,7 @@ export class OrderHistoryComponent implements OnInit {
 
   updateOrders() {
     localStorage.setItem("orders", JSON.stringify(this.orders));
-    this.orders = [...this.orders]; // refresh UI
+    this.orders = [...this.orders]; 
   }
 
   logout() {

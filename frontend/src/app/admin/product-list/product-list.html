@@ -1,6 +1,6 @@
 <div class="container mt-4">
 
-  <!-- HEADER -->
+
   <div class="d-flex justify-content-between align-items-center mb-3">
 
     <button class="btn btn-gradient btn-sm" (click)="add()">+ Add Product</button>
@@ -19,7 +19,7 @@
 
   </div>
 
-  <!-- SEARCH -->
+
   <div class="card p-3 shadow-sm mb-3">
 
     <div class="d-flex gap-2 flex-wrap">
@@ -42,7 +42,7 @@
 
   </div>
 
-  <!-- SORT -->
+
   <div class="mb-3">
     <button class="btn btn-sort btn-sm me-2" (click)="sort('price')">
       Price {{ sortField === 'price' ? (sortDirection === 'asc' ? '↑' : '↓') : '' }}
@@ -53,7 +53,7 @@
     </button>
   </div>
 
-  <!-- TABLE -->
+  
   <div class="table-responsive">
 
     <table class="table custom-table align-middle text-center">
@@ -76,7 +76,7 @@
 
         <tr *ngFor="let p of paginatedProducts; trackBy: trackById">
 
-          <!-- PRODUCT -->
+          
           <td class="text-start d-flex align-items-center gap-2">
 
             <img 
@@ -113,14 +113,14 @@
             {{ p.description }}
           </td>
 
-          <!-- EDIT -->
+        
           <td>
             <button class="btn btn-warning btn-sm" (click)="edit(p.id)">
               Edit
             </button>
           </td>
 
-          <!-- DELETE -->
+          
           <td>
 
             <ng-container *ngIf="confirmDeleteId !== p.id">
@@ -144,14 +144,13 @@
 
   </div>
 
-  <!-- NO DATA -->
+  
   <ng-template #noData>
     <div class="text-center mt-3 text-muted">
       No data found
     </div>
   </ng-template>
 
-  <!-- PAGINATION -->
   <div class="text-center mt-4">
 
     <button 
