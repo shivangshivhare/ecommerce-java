@@ -1,6 +1,6 @@
 <div class="container-fluid p-0">
 
-  <!-- NAVBAR (UNCHANGED) -->
+  
   <nav class="navbar navbar-dark bg-dark px-3">
 
     <span class="navbar-brand">Shop With Us</span>
@@ -37,7 +37,7 @@
 
   </nav>
 
-  <!-- MESSAGE -->
+  
   <div *ngIf="message" class="container mt-3">
     <div class="alert shadow-sm"
          [ngClass]="{
@@ -49,12 +49,12 @@
     </div>
   </div>
 
-  <!-- PRODUCT DETAILS -->
+  
   <div class="container mt-4" *ngIf="product">
 
     <div class="row g-4 align-items-start">
 
-      <!-- IMAGE CARD -->
+    
       <div class="col-md-4">
         <div class="card shadow-sm border-0 text-center p-3">
 
@@ -65,7 +65,7 @@
         </div>
       </div>
 
-      <!-- DETAILS CARD -->
+      
       <div class="col-md-8">
         <div class="card shadow-sm border-0 p-4">
 
@@ -87,7 +87,7 @@
             <span class="fw-bold">Unit:</span> {{ product.uom }}
           </div>
 
-          <!-- STOCK -->
+          
           <div class="mb-2 fw-bold">
             Stock:
             <span [class.text-success]="product.quantity > 5"
@@ -99,13 +99,13 @@
             </span>
           </div>
 
-          <!-- LOW STOCK -->
+          
           <div *ngIf="product.quantity > 0 && product.quantity <= 5"
                class="text-danger fw-bold mb-2">
             Only {{ product.quantity }} left!
           </div>
 
-          <!-- QUANTITY -->
+          
           <div class="d-flex align-items-center mb-3">
 
             <label class="fw-bold me-3">Quantity:</label>
@@ -122,12 +122,12 @@
 
           </div>
 
-          <!-- TOTAL -->
+        
           <div class="fw-bold fs-5 mb-4">
             Total: ₹ {{ product.price * quantity }}
           </div>
 
-          <!-- BUTTONS -->
+          
           <div class="d-flex gap-3 flex-wrap">
 
             <button *ngIf="!isInCart"
