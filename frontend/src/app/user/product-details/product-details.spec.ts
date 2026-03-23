@@ -1,22 +1,33 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ProductDetailComponent } from './product-details';
+import { ActivatedRoute } from '@angular/router';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
-describe('ProductDetails', () => {
+describe('ProductDetailComponent', () => {
+
   let component: ProductDetailComponent;
   let fixture: ComponentFixture<ProductDetailComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [ProductDetailComponent],
-    }).compileComponents();
+      providers: [
+        provideHttpClientTesting(),
+        {
+          provide: ActivatedRoute, 
+          useValue: {
+            snapshot: { paramMap: { get: () => '1' } }
+          }
+        }
+      ]
+    });
 
     fixture = TestBed.createComponent(ProductDetailComponent);
     component = fixture.componentInstance;
-    await fixture.whenStable();
   });
 
-  it('should create', () => {
+  it('should create product details component', () => {
     expect(component).toBeTruthy();
   });
+
 });

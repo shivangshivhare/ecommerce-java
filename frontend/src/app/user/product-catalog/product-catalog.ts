@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { ProductService } from '../../services/product';
+import { CartService } from '../../services/cart-service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,23 +13,21 @@ import { Router } from '@angular/router';
   styleUrl: './product-catalog.css',
 })
 export class ProductCatalogComponent implements OnInit {
-
-  products: any[] = [];
+  categories: string[] = [];
   allProducts: any[] = [];
   displayedProducts: any[] = [];
 
   cartCount: number = 0;
   searchText: string = '';
-  searchType: string = 'name';
-
+  searchType: string = '';
   username: string = 'User';
   showDropdown: boolean = false;
-
   pageSize = 50;
   currentIndex = 0;
 
   constructor(
-    private service: ProductService,
+    private productService: ProductService,
+    private cartService: CartService,
     private cdr: ChangeDetectorRef,
     private router: Router
   ) {}
@@ -37,33 +36,36 @@ export class ProductCatalogComponent implements OnInit {
     this.loadProducts();
     this.loadUser();
     this.loadCartCount();
+    this.loadCategories();
   }
-
-  
+loadCategories() {
+  this.productService.getCategories().subscribe({
+    next: (res) => {
+      this.categories = res || [];
+      this.cdr.detectChanges();
+    },
+    error: () => {
+      this.categories = [];
+    }
+  });
+}
   loadUser() {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-
     this.username =
       `${user.firstName || ''} ${user.lastName || ''}`.trim()
       || user.username
       || 'User';
   }
 
-  
+  // ================= PRODUCTS =================
+
   loadProducts() {
-  this.service.getAll().subscribe({
-    next: (res) => {
+    this.productService.getAll().subscribe((res: any[]) => {
       this.allProducts = res || [];
       this.resetScroll();
-
       this.cdr.detectChanges();
-    },
-    error: () => {
-      this.allProducts = [];
-      this.cdr.detectChanges(); 
-    }
-  });
-}
+    });
+  }
 
   resetScroll() {
     this.displayedProducts = [];
@@ -72,11 +74,7 @@ export class ProductCatalogComponent implements OnInit {
   }
 
   loadMore() {
-    const next = this.allProducts.slice(
-      this.currentIndex,
-      this.currentIndex + this.pageSize
-    );
-
+    const next = this.allProducts.slice(this.currentIndex, this.currentIndex + this.pageSize);
     this.displayedProducts = [...this.displayedProducts, ...next];
     this.currentIndex += this.pageSize;
   }
@@ -88,53 +86,71 @@ export class ProductCatalogComponent implements OnInit {
     }
   }
 
-search() {
+  search() {
+    const text = this.searchText.toLowerCase().trim();
 
-  const text = this.searchText.toLowerCase().trim();
-
-  if (!text && !this.searchType) {
-    this.resetScroll();
-    return;
+    this.displayedProducts = this.allProducts.filter(p =>
+      (!text || p.name?.toLowerCase().includes(text)) &&
+      (!this.searchType || p.category === this.searchType)
+    );
   }
 
-  this.displayedProducts = this.allProducts.filter(p => {
+  // ================= CART =================
 
-    const matchesText =
-      !text || p.name?.toLowerCase().includes(text);
-
-    const matchesCategory =
-      !this.searchType || p.category === this.searchType;
-
-    return matchesText && matchesCategory;
-  });
-}
-  
   loadCartCount() {
-  const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-  this.cartCount = cart.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0);
-}
+    let user = JSON.parse(localStorage.getItem("user")!);
+
+    this.cartService.getCart(user.id)
+      .subscribe(res => this.cartCount = res.length);
+  }
 
   addToCart(product: any) {
-    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    cart.push(product);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    this.cartCount = cart.length;
+
+    let user = JSON.parse(localStorage.getItem("user")!);
+
+    this.cartService.getCart(user.id).subscribe(res => {
+
+      let existing = res.find(i => i.productId === product.id);
+
+      if (existing) {
+
+        this.cartService.updateQty(existing.id, existing.quantity + 1)
+          .subscribe(() => {
+            this.loadCartCount();
+            this.router.navigate(['/cart']);
+          });
+
+      } else {
+
+        let cartItem = {
+          userId: user.id,
+          productId: product.id,
+          name: product.name,
+          image: product.image,
+          price: product.price,
+          quantity: 1
+        };
+
+        this.cartService.addToCart(cartItem)
+          .subscribe(() => {
+            this.loadCartCount();
+            this.router.navigate(['/cart']);
+          });
+      }
+    });
   }
 
-  
-  goToCart() {
-    this.router.navigate(['/cart']);
-  }
+  // ================= NAVIGATION =================
 
-  goToOrders() {
-    this.router.navigate(['/orders']);
-  }
+  goToCart() { this.router.navigate(['/cart']); }
+  goToOrders() { this.router.navigate(['/orders']); }
+  goToProfile() { this.router.navigate(['/profile']); }
 
-  goToProfile() {
-    this.router.navigate(['/profile']);
+  viewProduct(p: any) {
+    this.router.navigate(['/product', p.id]);
   }
-viewProduct(product: any) {
-  this.router.navigate(['/product', product.id]);
+goToCatalog() {
+  this.router.navigate(['/catalog']);
 }
   logout() {
     localStorage.clear();

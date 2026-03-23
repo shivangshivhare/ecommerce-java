@@ -13,6 +13,23 @@ public class OrderItem {
 	private Long productId;
 	private Integer quantity;
 	private Double price;
+    private String name; 
+ 
+    private String image;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	public Long getId() {
 		return id;
 	}

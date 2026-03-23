@@ -1,57 +1,61 @@
-<div class="container mt-5 col-md-4">
+<div class="container d-flex justify-content-center mt-5">
 
-  <h3 class="mb-3">Update Profile</h3>
+  <div class="card shadow p-4" style="width: 420px; border-radius: 12px;">
 
+    <h4 class="text-center mb-4">Update Profile</h4>
 
-  <input class="form-control mb-2"
-         placeholder="Username"
-         [(ngModel)]="user.username">
+    <!-- Username -->
+    <input class="form-control mb-3"
+           placeholder="Username"
+           [(ngModel)]="user.username">
 
+    <!-- First Name -->
+    <input class="form-control mb-3"
+           placeholder="First Name"
+           [(ngModel)]="user.firstName">
 
-  <input class="form-control mb-2"
-         placeholder="First Name"
-         [(ngModel)]="user.firstName">
+    <!-- Last Name -->
+    <input class="form-control mb-3"
+           placeholder="Last Name"
+           [(ngModel)]="user.lastName">
 
-  <input class="form-control mb-2"
-         placeholder="Last Name"
-         [(ngModel)]="user.lastName">
+    <!-- Address -->
+    <input class="form-control mb-3"
+           placeholder="Address"
+           [(ngModel)]="user.address">
 
-  <input class="form-control mb-2"
-         placeholder="Address"
-         [(ngModel)]="user.address">
+    <!-- Phone -->
+    <input class="form-control mb-3"
+           placeholder="Phone Number"
+           [(ngModel)]="user.phoneNumber">
 
+    <!-- Password -->
+    <input type="password"
+           class="form-control mb-3"
+           placeholder="New Password"
+           [(ngModel)]="user.password">
 
-  <input class="form-control mb-2"
-         placeholder="Phone"
-         [(ngModel)]="user.phoneNumber">
+    <!-- Confirm Password -->
+    <input type="password"
+           class="form-control mb-3"
+           placeholder="Confirm Password"
+           [(ngModel)]="confirmPassword">
 
+    <!-- Error -->
+    <div class="alert alert-danger py-2" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
 
-  <input type="password"
-         class="form-control mb-2"
-         placeholder="Password"
-         [(ngModel)]="user.password">
+    <!-- Buttons -->
+    <div class="d-grid gap-2 mt-3">
+      <button class="btn btn-primary" (click)="update()">
+        Save Changes
+      </button>
 
-  
-  <input type="password"
-         class="form-control mb-2"
-         placeholder="Confirm Password"
-         [(ngModel)]="confirmPassword">
-
-
-  <div class="text-danger mb-2" *ngIf="errorMessage">
-    {{ errorMessage }}
-  </div>
-
-
-  <div class="d-flex gap-2">
-
-    <button class="btn btn-primary w-100" (click)="update()">
-      Save
-    </button>
-
-    <button class="btn btn-secondary w-100" (click)="goHome()">
-      Back
-    </button>
+      <button class="btn btn-outline-secondary" (click)="goHome()">
+        Back
+      </button>
+    </div>
 
   </div>
 

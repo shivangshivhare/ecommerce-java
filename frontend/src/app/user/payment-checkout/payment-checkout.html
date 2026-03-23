@@ -1,0 +1,69 @@
+<div class="container-fluid bg-light vh-100 d-flex justify-content-center align-items-center">
+
+  <div class="card shadow-lg p-4" style="width: 500px; border-radius: 12px;">
+
+    <h4 class="text-center fw-bold mb-4">Secure Payment</h4>
+
+    <!-- LOADING -->
+    <div *ngIf="isLoading" class="text-center">
+      Loading cart...
+    </div>
+
+    <!-- ORDER SUMMARY -->
+    <div *ngIf="!isLoading">
+
+      <div class="border rounded p-3 mb-4 bg-light">
+        <h6 class="fw-bold mb-2">Order Summary</h6>
+
+        <div *ngFor="let item of order.items" class="mb-2">
+          <p class="mb-0"><strong>{{ item.name }}</strong></p>
+          <small>₹{{ item.price }} × {{ item.quantity }}</small>
+        </div>
+
+        <hr>
+
+        <h5 class="fw-bold text-success">
+          Total: ₹ {{ order.totalAmount }}
+        </h5>
+      </div>
+
+      <!-- PAYMENT METHOD -->
+      <div class="mb-3">
+        <label class="fw-bold mb-2">Payment Method</label>
+
+        <select class="form-select" [(ngModel)]="paymentMethod">
+          <option value="card">Credit / Debit Card</option>
+          <option value="upi">UPI</option>
+          <option value="cod">Cash on Delivery</option>
+        </select>
+      </div>
+
+      <!-- CARD -->
+      <div *ngIf="paymentMethod === 'card'">
+        <input class="form-control mb-2" placeholder="Card Number">
+        <div class="d-flex gap-2">
+          <input class="form-control" placeholder="MM/YY">
+          <input class="form-control" placeholder="CVV">
+        </div>
+        <input class="form-control mt-2" placeholder="Card Holder Name">
+      </div>
+
+      <!-- UPI -->
+      <div *ngIf="paymentMethod === 'upi'">
+        <input class="form-control" placeholder="Enter UPI ID">
+      </div>
+
+      <!-- BUTTON -->
+      <button class="btn btn-success w-100 mt-4 fw-bold"
+              [disabled]="isPaying"
+              (click)="pay()">
+        {{ isPaying ? 'Processing...' : ('Pay ₹ ' + order.totalAmount) }}
+      </button>
+
+      <p class="text-center mt-3 text-success">{{ message }}</p>
+
+    </div>
+
+  </div>
+
+</div>

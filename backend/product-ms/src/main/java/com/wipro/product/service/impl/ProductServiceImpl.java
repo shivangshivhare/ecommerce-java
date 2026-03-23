@@ -117,4 +117,8 @@ public class ProductServiceImpl implements ProductService {
         dto.setImageUrl(p.getImageUrl());
         return dto;
     }
+    @Override
+    public List<String> getCategories() {
+        return repo.findDistinctCategories();
+    }
 }

@@ -1,22 +1,33 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CartComponent } from './cart';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
-describe('Cart', () => {
+describe('CartComponent', () => {
+
   let component: CartComponent;
   let fixture: ComponentFixture<CartComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+
+    localStorage.setItem('user', JSON.stringify({ id: 1 }));
+
+    TestBed.configureTestingModule({   
       imports: [CartComponent],
-    }).compileComponents();
+      providers: [provideHttpClientTesting()]
+    });
 
     fixture = TestBed.createComponent(CartComponent);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+
+    fixture.detectChanges(); 
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    localStorage.clear();
+  });
+
+  it('should create cart component', () => {
     expect(component).toBeTruthy();
   });
+
 });

@@ -22,10 +22,7 @@ public class ProductController {
         return service.save(dto);
     }
 
-    @PutMapping
-    public ProductDTO update(@RequestBody ProductDTO dto) {
-        return service.update(dto);
-    }
+   
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
@@ -49,9 +46,18 @@ public class ProductController {
         return service.getAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     public ProductDTO getById(@PathVariable Long id) {
-        return service.getById(id); 
-    
+        return service.getById(id);
     }
+    @GetMapping("/categories")
+    public List<String> getCategories() {
+        return service.getCategories();
+    }
+    @PutMapping("/{id}")
+    public ProductDTO update(@PathVariable Long id, @RequestBody ProductDTO dto) {
+        dto.setId(id);
+        return service.update(dto);
+    }
+    
 }

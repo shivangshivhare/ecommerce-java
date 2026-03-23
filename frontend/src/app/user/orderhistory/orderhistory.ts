@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-order-history',
@@ -13,26 +14,92 @@ export class OrderHistoryComponent implements OnInit {
 
   orders: any[] = [];
   username: string = '';
+  isLoading: boolean = true;
+  selectedOrder: any = null;
+  isCancelling: boolean = false;
+  message: string = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
-    this.username = localStorage.getItem("username") || "User";
-
-    const data = localStorage.getItem("orders");
-    this.orders = data ? JSON.parse(data) : [];
+    const user = JSON.parse(localStorage.getItem("user") || '{}');
+    this.username = user?.name || user?.username || 'User';
+    this.loadOrders();
   }
 
-  cancelOrder(order: any) {
-    if (order.status === 'COMPLETED' || order.status === 'CANCELLED') return;
+  loadOrders() {
+    const user = JSON.parse(localStorage.getItem("user") || '{}');
 
-    order.status = 'CANCELLED';
-    this.updateOrders();
+    this.isLoading = true;
+    this.cdr.detectChanges(); // show loading immediately
+
+    this.http.get<any[]>(`http://localhost:8080/order/${user.id}`)
+      .subscribe({
+        next: (res) => {
+          this.orders = (res || []).map(order => ({
+            ...order,
+            items: order.items || [],
+            totalAmount: order.totalAmount || order.total || 0,
+            status: (order.status || '').toUpperCase()
+          }));
+
+          this.isLoading = false;
+          this.cdr.detectChanges(); // refresh UI
+        },
+        error: (err) => {
+          console.error(err);
+          this.orders = [];
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        }
+      });
   }
 
-  updateOrders() {
-    localStorage.setItem("orders", JSON.stringify(this.orders));
-    this.orders = [...this.orders]; 
+  openCancelModal(order: any) {
+    this.selectedOrder = order;
+    this.cdr.detectChanges();
+  }
+
+  closeModal() {
+    this.selectedOrder = null;
+    this.cdr.detectChanges();
+  }
+
+  confirmCancel() {
+  if (!this.selectedOrder || !this.selectedOrder.id) {
+    this.message = 'Invalid order selected';
+    return;
+  }
+
+  const orderId = Number(this.selectedOrder.id);
+
+  this.isCancelling = true;
+  this.cdr.detectChanges();
+
+  this.http.put(`http://localhost:8080/order/cancel/${orderId}`, {})
+    .subscribe({
+      next: () => {
+        this.message = 'Order cancelled successfully';
+        this.isCancelling = false;
+        this.closeModal();
+        this.loadOrders();
+      },
+      error: (err) => {
+        console.error(err);
+        this.message = err?.error?.message || 'Failed to cancel order';
+        this.isCancelling = false;
+        this.closeModal();
+        this.cdr.detectChanges();
+      }
+    });
+}
+
+  onImageError(event: any) {
+    event.target.src = 'assets/no-image.png';
   }
 
   logout() {
@@ -42,5 +109,17 @@ export class OrderHistoryComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['/catalog']);
+  }
+
+  goToCatalog() {
+    this.router.navigate(['/catalog']);
+  }
+
+  goToCart() {
+    this.router.navigate(['/cart']);
+  }
+
+  goToOrders() {
+    this.router.navigate(['/orders']);
   }
 }

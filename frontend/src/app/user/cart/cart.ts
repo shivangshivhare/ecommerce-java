@@ -1,7 +1,8 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { CartService } from '../../services/cart-service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-cart',
@@ -14,72 +15,65 @@ export class CartComponent implements OnInit {
 
   cartItems: any[] = [];
   username: string = '';
+  totalAmount: number = 0;
 
-  constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef,) {}
+  constructor(
+    private cartService: CartService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
-  let userStr = localStorage.getItem("user");
-
-  if (!userStr) {
-    alert("User not logged in");
-    this.router.navigate(['/login']);
-    return;
+    let user = JSON.parse(localStorage.getItem("user")!);
+    this.username = user?.name || user?.username || 'User';
+    this.loadCart();
   }
 
-  let user = JSON.parse(userStr);
+  loadCart() {
+    let user = JSON.parse(localStorage.getItem("user")!);
 
-  this.username = user.firstName;
-
-  this.loadCart(user.id);
-}
-
-  loadCart(userId: number) {
-    this.http.get(`http://localhost:8084/cart/${userId}`)
-      .subscribe((res: any) => {
+    this.cartService.getCart(user.id)
+      .subscribe((res: any[]) => {
         this.cartItems = res;
+        this.calculateTotal();
+        this.cdr.detectChanges();
       });
-       this.cdr.detectChanges();
   }
 
-
-  increaseQty(item: any) {
-    item.quantity++;
-  }
-
-  
-  decreaseQty(item: any) {
-    if (item.quantity > 1) {
-      item.quantity--;
+  calculateTotal() {
+    this.totalAmount = 0;
+    for (let item of this.cartItems) {
+      this.totalAmount += item.price * item.quantity;
     }
   }
 
-
   removeItem(id: number) {
-    this.http.delete(`http://localhost:8084/cart/${id}`)
+    this.cartService.deleteItem(id)
+      .subscribe(() => this.loadCart());
+  }
+
+  increaseQty(item: any) {
+    this.cartService.updateQty(item.id, item.quantity + 1)
       .subscribe(() => {
-        this.cartItems = this.cartItems.filter(p => p.id !== id);
+        item.quantity++;
+        this.calculateTotal();
       });
   }
 
-  
-  getTotal() {
-    return this.cartItems.reduce((sum, item) =>
-      sum + (item.price * item.quantity), 0);
+  decreaseQty(item: any) {
+    if (item.quantity > 1) {
+      this.cartService.updateQty(item.id, item.quantity - 1)
+        .subscribe(() => {
+          item.quantity--;
+          this.calculateTotal();
+        });
+    }
   }
-
   checkout() {
-    let user = JSON.parse(localStorage.getItem("user")!);
-
-    this.http.post(`http://localhost:8084/order?userId=${user.id}`, {})
-      .subscribe(() => {
-        alert("Order placed successfully!");
-
-        this.cartItems = [];
-        this.router.navigate(['/catalog']);
-      });
+    this.router.navigate(['/checkout']);
   }
 
   goBack() {
-    window.history.back();
+    this.router.navigate(['/catalog']);
   }
 }

@@ -168,10 +168,12 @@ export class ProductDetailComponent implements OnInit {
 
   localStorage.setItem('order', JSON.stringify(order));
 
-  this.showMessage('Order placed successfully', 'success');
 
   setTimeout(() => {
     this.router.navigate(['/checkout']);
   }, 1000);
+}
+goToCatalog() {
+  this.router.navigate(['/catalog']);
 }
 }

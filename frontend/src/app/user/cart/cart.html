@@ -1,74 +1,68 @@
-<div class="container mt-4">
+<div class="container mt-3">
 
-  
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div class="d-flex align-items-center gap-3">
-      <button class="btn btn-outline-secondary btn-sm" (click)="goBack()">← Back</button>
-      <h3 class="mb-0">Shopping Cart</h3>
-    </div>
-
-    <div>
-      Welcome, {{ username }}
-    </div>
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <button class="btn btn-outline-secondary btn-sm" (click)="goBack()">← Back</button>
+    <h5 class="mb-0">Shopping Cart</h5>
+    <span>Welcome, {{ username }}</span>
   </div>
 
-  <div class="row">
+  <!-- EMPTY CART -->
+  <div *ngIf="cartItems.length === 0" class="text-center mt-5">
+    <h6 class="text-muted">Your cart is empty</h6>
+  </div>
 
-    
-    <div class="col-md-8">
+  <div *ngFor="let item of cartItems" class="card mb-3 shadow-sm p-2">
 
-      <div *ngFor="let item of cartItems" class="card mb-3 p-3">
+  <div class="d-flex align-items-center">
 
-        <div class="d-flex align-items-center gap-3">
-
-          
-          <img 
-            [src]="item.image || 'https://via.placeholder.com/100'" 
-            style="width:100px; height:100px; object-fit:contain;"
-          />
-
-          
-          <div class="flex-grow-1">
-
-            <h5>{{ item.name || ('Product ID: ' + item.productId) }}</h5>
-            <p class="mb-2">₹{{ item.price }}</p>
-
-            
-            <div class="d-flex align-items-center gap-2">
-
-              <button class="btn btn-sm btn-outline-secondary" (click)="decreaseQty(item)">-</button>
-              <span>{{ item.quantity }}</span>
-              <button class="btn btn-sm btn-outline-secondary" (click)="increaseQty(item)">+</button>
-
-            </div>
-
-          </div>
-
-          
-          <button class="btn btn-danger btn-sm" (click)="removeItem(item.id)">
-            Delete
-          </button>
-
-        </div>
-
-      </div>
-
+    <!-- IMAGE -->
+    <div style="width: 80px;">
+      <img 
+        [src]="item.image ? item.image : 'assets/no-image.png'" 
+        class="img-fluid rounded"
+        style="height: 70px; object-fit: contain;"
+      />
     </div>
 
-    
-    <div class="col-md-4">
-
-      <div class="card p-3">
-
-        <h4>Total: ₹{{ getTotal() }}</h4>
-
-        <button class="btn btn-success w-100 mt-3" (click)="checkout()">
-          Proceed to Buy
-        </button>
-
-      </div>
-
+    <!-- DETAILS -->
+    <div class="flex-grow-1 ms-3">
+      <h6 class="mb-1">{{ item.name }}</h6>
+      <p class="text-muted mb-1">₹{{ item.price }}</p>
+      <small class="text-success">In Stock</small>
     </div>
+
+    <!-- QUANTITY -->
+    <div class="d-flex align-items-center me-2">
+      <button class="btn btn-sm btn-outline-secondary" (click)="decreaseQty(item)">-</button>
+      <span class="px-2">{{ item.quantity }}</span>
+      <button class="btn btn-sm btn-outline-secondary" (click)="increaseQty(item)">+</button>
+    </div>
+
+   <button class="btn btn-sm btn-danger" (click)="removeItem(item.id)">
+  Remove
+</button>
+
+  </div>
+
+</div>
+
+  <!-- TOTAL SECTION -->
+  <div class="card p-3 mt-3 shadow-sm">
+
+    <div class="d-flex justify-content-between">
+      <h6>Total Items:</h6>
+      <h6>{{ cartItems.length }}</h6>
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <h5>Total Amount:</h5>
+      <h5 class="text-success">₹{{ totalAmount }}</h5>
+    </div>
+
+    <button class="btn btn-success w-100 mt-3" (click)="checkout()">
+      Proceed to Buy
+    </button>
 
   </div>
 

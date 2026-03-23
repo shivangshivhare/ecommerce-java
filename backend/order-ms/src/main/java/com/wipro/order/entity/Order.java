@@ -1,5 +1,6 @@
 package com.wipro.order.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -22,7 +23,15 @@ public class Order {
     private Long userId;
     private Double totalAmount;
     private String status;
+    private LocalDateTime orderTime;
 
+    public LocalDateTime getOrderTime() {
+        return orderTime;
+    }
+
+    public void setOrderTime(LocalDateTime orderTime) {
+        this.orderTime = orderTime;
+    }
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
     private List<OrderItem> items;

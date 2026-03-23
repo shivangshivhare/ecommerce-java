@@ -25,10 +25,9 @@
     <div class="d-flex gap-2 flex-wrap">
 
       <select class="form-select form-select-sm w-auto" [(ngModel)]="searchCategory">
-        <option value="">All Categories</option>
-        <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
-      </select>
-
+  <option value="">All Categories</option>
+  <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+</select>
       <input 
         type="text"
         class="form-control form-control-sm w-50"

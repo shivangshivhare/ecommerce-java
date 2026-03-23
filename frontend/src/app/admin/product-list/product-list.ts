@@ -12,7 +12,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './product-list.css',
 })
 export class ProductListComponent implements OnInit {
-  categories: string[] = ['Kitchen', 'Skincare', 'Electronics','Book'];
+
+  categories: string[] = [];  
   products: any[] = [];
   allProducts: any[] = [];
 
@@ -29,6 +30,8 @@ export class ProductListComponent implements OnInit {
 
   confirmDeleteId: number | null = null;
 
+  dropdownOpen: boolean = false;
+
   constructor(
     private service: ProductService,
     private router: Router,
@@ -37,11 +40,13 @@ export class ProductListComponent implements OnInit {
 
   ngOnInit() {
     this.loadProducts();
+    this.loadCategories();
 
     const user = localStorage.getItem('username');
     if (user) this.username = user;
   }
 
+  // LOAD PRODUCTS
   loadProducts() {
     this.service.getAll().subscribe({
       next: (res) => {
@@ -52,6 +57,19 @@ export class ProductListComponent implements OnInit {
       error: () => {
         this.products = [];
         this.allProducts = [];
+      }
+    });
+  }
+
+  // LOAD CATEGORIES FROM BACKEND
+  loadCategories() {
+    this.service.getCategories().subscribe({
+      next: (res) => {
+        this.categories = res || [];
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.categories = [];
       }
     });
   }
@@ -79,42 +97,29 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-
+  // FIXED SEARCH
   search() {
-    if (!this.searchText) {
-      this.products = [...this.allProducts];
-      this.page = 1;
-      return;
-    }
-
     const text = this.searchText.toLowerCase();
 
     this.products = this.allProducts.filter(p => {
 
-      if (this.searchCategory === 'category') {
-        return p.category?.toLowerCase().includes(text);
-      }
-
-      if (this.searchCategory === 'description') {
-        return p.description?.toLowerCase().includes(text);
-      }
-
-      if (this.searchCategory === 'price') {
-        return p.price?.toString().includes(text);
-      }
-
-      return (
+      const matchesText =
+        !text ||
+        p.name?.toLowerCase().includes(text) ||
         p.category?.toLowerCase().includes(text) ||
-        p.description?.toLowerCase().includes(text) ||
-        p.price?.toString().includes(text)
-      );
+        p.description?.toLowerCase().includes(text);
+
+      const matchesCategory =
+        !this.searchCategory || p.category === this.searchCategory;
+
+      return matchesText && matchesCategory;
     });
 
     this.page = 1;
   }
 
+  // SORT
   sort(field: string) {
-
     if (this.sortField === field) {
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
     } else {
@@ -123,7 +128,6 @@ export class ProductListComponent implements OnInit {
     }
 
     this.products.sort((a, b) => {
-
       let valA = a[field] ?? 0;
       let valB = b[field] ?? 0;
 
@@ -132,7 +136,6 @@ export class ProductListComponent implements OnInit {
       } else {
         return valA < valB ? 1 : -1;
       }
-
     });
 
     this.page = 1;
@@ -151,10 +154,8 @@ export class ProductListComponent implements OnInit {
     const start = (this.page - 1) * this.pageSize;
     return this.products.slice(start, start + this.pageSize);
   }
-dropdownOpen: boolean = false;
 
-toggleDropdown() {
-  this.dropdownOpen = !this.dropdownOpen;
-}
-
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
 }

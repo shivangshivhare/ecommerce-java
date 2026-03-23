@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class ProductService {private baseUrl = "http://localhost:8083/product";
+export class ProductService {private baseUrl = "http://localhost:8080/product";
 
   constructor(private http: HttpClient) {}
 
@@ -30,5 +30,8 @@ export class ProductService {private baseUrl = "http://localhost:8083/product";
   }
   search(text: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/search?query=${text}`);
+  }
+  getCategories(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/categories`);
   }
 }

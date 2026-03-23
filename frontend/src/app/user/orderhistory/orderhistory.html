@@ -1,88 +1,152 @@
+
 <div class="container mt-4">
 
+  <div *ngIf="message" class="alert alert-info text-center">
+    {{ message }}
+  </div>
 
-  <div class="d-flex justify-content-between align-items-center mb-3">
+  <div class="d-flex justify-content-between align-items-center mb-4">
 
-    <button class="btn btn-secondary btn-sm" (click)="goBack()">Back</button>
+    <button class="btn btn-outline-secondary btn-sm" (click)="goBack()">
+      ← Back
+    </button>
 
     <div class="dropdown">
-      <span class="badge bg-primary px-3 py-2 dropdown-toggle" data-bs-toggle="dropdown" style="cursor:pointer">
-        {{username}}
+      <span 
+        class="badge bg-primary px-3 py-2 dropdown-toggle" 
+        data-bs-toggle="dropdown" 
+        style="cursor:pointer"
+      >
+        {{ username }}
       </span>
-
       <ul class="dropdown-menu dropdown-menu-end">
-        <li><a class="dropdown-item text-danger" (click)="logout()">Logout</a></li>
+        <li>
+          <a class="dropdown-item text-danger" (click)="logout()">
+            Logout
+          </a>
+        </li>
       </ul>
     </div>
 
   </div>
 
-  
-  <div class="card shadow-sm">
-    <div class="card-body p-0">
+  <div *ngIf="isLoading" class="text-center mt-5">
+    <h6 class="text-muted">Loading orders...</h6>
+  </div>
 
-      <table class="table table-bordered mb-0 text-center">
+  <div *ngIf="!isLoading && orders.length === 0" class="text-center mt-5">
+    <h6 class="text-muted">No orders found</h6>
+  </div>
 
-        <thead class="table-primary">
-          <tr>
-            <th>Order Details</th>
-            <th>Total Amount</th>
-            <th>Order Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
+  <div *ngIf="!isLoading && orders.length > 0">
 
-        <tbody>
+    <div *ngFor="let order of orders" class="card shadow-sm mb-4 border-0">
 
-          <tr *ngFor="let order of orders">
+      <div class="card-body">
 
-        
-            <td>
-              <div *ngFor="let item of order.items">
-                {{item.name}} (x{{item.quantity}})
-              </div>
-            </td>
+        <div class="d-flex justify-content-between align-items-center mb-3">
 
-    
-            <td>₹ {{order.total}}</td>
+          <div>
+            <h6 class="mb-1 fw-bold">Order #{{ order.id }}</h6>
+            <small class="text-muted">Order Summary</small>
+          </div>
 
-        
-            <td>
-              <span 
-                [ngClass]="{
-                  'text-success': order.status === 'COMPLETED',
-                  'text-danger': order.status === 'CANCELLED',
-                  'text-warning': order.status === 'PENDING'
-                }">
-                {{order.status}}
-              </span>
-            </td>
+          <span 
+            class="badge px-3 py-2"
+            [ngClass]="{
+              'bg-warning text-dark': order.status === 'PENDING' || order.status === 'CREATED',
+              'bg-success': order.status === 'COMPLETED',
+              'bg-danger': order.status === 'CANCELLED' || order.status === 'FAILED'
+            }"
+          >
+            {{ order.status }}
+          </span>
 
-        
-            <td>
-              <button 
-                *ngIf="order.status !== 'COMPLETED' && order.status !== 'CANCELLED'"
-                class="btn btn-sm btn-danger"
-                (click)="cancelOrder(order)">
-                Cancel
-              </button>
+        </div>
 
-              <span *ngIf="order.status === 'COMPLETED' || order.status === 'CANCELLED'">
-                -
-              </span>
-            </td>
+        <div 
+          *ngFor="let item of order.items || []" 
+          class="d-flex align-items-center py-2 border-top"
+        >
 
-          </tr>
+          <div style="width: 60px;">
+            <img 
+              [src]="item.image || 'assets/no-image.png'"
+              (error)="onImageError($event)"
+              class="img-fluid rounded"
+              style="height: 55px; object-fit: contain;"
+            />
+          </div>
 
-          <tr *ngIf="orders.length === 0">
-            <td colspan="4">No orders found</td>
-          </tr>
+          <div class="flex-grow-1 ms-3">
+            <div class="fw-semibold">{{ item.name }}</div>
+            <small class="text-muted">
+              ₹{{ item.price }} × {{ item.quantity }}
+            </small>
+          </div>
 
-        </tbody>
+          <div class="text-end">
+            <strong>₹{{ item.price * item.quantity }}</strong>
+          </div>
 
-      </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center border-top pt-3 mt-2">
+
+          <div>
+            <span class="fw-semibold">Total:</span>
+            <span class="fw-bold text-success ms-1">
+              ₹{{ order.totalAmount }}
+            </span>
+          </div>
+
+          <button 
+            *ngIf="order.status !== 'COMPLETED' && order.status !== 'CANCELLED'"
+            class="btn btn-sm btn-outline-danger"
+            (click)="openCancelModal(order)"
+          >
+            Cancel
+          </button>
+
+        </div>
+
+      </div>
 
     </div>
+
   </div>
+
+  <div *ngIf="selectedOrder" class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h6 class="modal-title">Cancel Order</h6>
+          <button type="button" class="btn-close" (click)="closeModal()"></button>
+        </div>
+
+        <div class="modal-body text-center">
+          <p>Are you sure you want to cancel Order #{{ selectedOrder.id }}?</p>
+        </div>
+
+        <div class="modal-footer justify-content-center">
+          <button class="btn btn-secondary btn-sm" (click)="closeModal()">
+            No
+          </button>
+
+          <button 
+            class="btn btn-danger btn-sm"
+            (click)="confirmCancel()"
+            [disabled]="isCancelling"
+          >
+            {{ isCancelling ? 'Cancelling...' : 'Yes, Cancel' }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedOrder" class="modal-backdrop fade show"></div>
 
 </div>

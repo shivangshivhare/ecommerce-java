@@ -3,20 +3,23 @@
 
   <nav class="navbar navbar-dark bg-dark px-3">
 
-    <span class="navbar-brand">Shop With Us</span>
+   <span class="navbar-brand" style="cursor:pointer;" (click)="goToCatalog()">
+  Shop With Us
+</span>
 
 <div class="d-flex mx-auto" style="width: 50%; gap:10px;">
 
 
   <select class="form-select w-25"
-          [(ngModel)]="searchType"
-          (change)="search()">
-    <option value="">All</option>
-    <option value="Kitchen">Kitchen</option>
-    <option value="Skincare">Skincare</option>
-    <option value="Electronics">Electronics</option>
-    <option value="Laptop">Laptop</option>
-  </select>
+        [(ngModel)]="searchType"
+        (change)="search()">
+
+  <option value="">All</option>
+  <option *ngFor="let c of categories" [value]="c">
+    {{ c }}
+  </option>
+
+</select>
 
   
   <input 
