@@ -5,3 +5,6 @@ target/
 *.log
 .vscode/
 .idea/
+frontend/.angular/
+frontend/node_modules/
+frontend/dist/
