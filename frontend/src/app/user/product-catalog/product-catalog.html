@@ -3,9 +3,21 @@
 
   <nav class="navbar navbar-dark bg-dark px-3">
 
-   <span class="navbar-brand" style="cursor:pointer;" (click)="goToCatalog()">
-  Shop With Us
-</span>
+   <span 
+    class="navbar-brand d-flex align-items-center logo-container" 
+    style="cursor:pointer;" 
+    (click)="goToCatalog()"
+  >
+
+    <img 
+     [src]="'assets/3536452-Photoroom.png'"
+      alt="Logo"
+      class="logo-img"
+    />
+
+    <span class="ms-2">Shop With Us</span>
+
+  </span>
 
 <div class="d-flex mx-auto" style="width: 50%; gap:10px;">
 
