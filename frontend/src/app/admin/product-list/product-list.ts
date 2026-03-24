@@ -39,12 +39,20 @@ export class ProductListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadProducts();
-    this.loadCategories();
 
-    const user = localStorage.getItem('username');
-    if (user) this.username = user;
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  if (!user || user.role !== "ADMIN") {
+    this.router.navigate(['/login']);
+    return;
   }
+
+  this.loadProducts();
+  this.loadCategories();
+
+  const username = localStorage.getItem('username');
+  if (username) this.username = username;
+}
 
   
   loadProducts() {

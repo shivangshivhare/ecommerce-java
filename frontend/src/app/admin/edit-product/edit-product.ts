@@ -25,24 +25,28 @@ export class EditProductComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const id = this.route.snapshot.params['id'];
 
-    
-    this.loadCategories();
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-    
-    this.service.getById(id).subscribe({
-      next: (res) => {
-        this.product = res;
-        this.cdr.detectChanges();
-      }
-    });
-
-    const user = localStorage.getItem('username');
-    this.username = user || 'User';
+  if (!user || user.role !== "ADMIN") {
+    this.router.navigate(['/login']);
+    return;
   }
 
-  
+  const id = this.route.snapshot.params['id'];
+
+  this.loadCategories();
+
+  this.service.getById(id).subscribe({
+    next: (res) => {
+      this.product = res;
+      this.cdr.detectChanges();
+    }
+  });
+
+  const username = localStorage.getItem('username');
+  this.username = username || 'User';
+}
   loadCategories() {
     this.service.getCategories().subscribe({
       next: (res) => {

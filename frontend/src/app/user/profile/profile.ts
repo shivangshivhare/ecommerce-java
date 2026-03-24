@@ -16,6 +16,7 @@ export class Profilecomponent implements OnInit {
   user: any = {};
   confirmPassword: string = '';
   errorMessage: string = '';
+  successMessage: string = '';
 
   constructor(
     private service: UserService,
@@ -28,27 +29,38 @@ export class Profilecomponent implements OnInit {
 
   update() {
 
-    if (!this.user.username || !this.user.email) {
-      this.errorMessage = "Username and Email are required";
-      return;
-    }
+  if (!this.user.username || !this.user.email) {
+    this.errorMessage = "Username and Email are required";
+    this.successMessage = "";
+    return;
+  }
 
-    if (this.user.password && this.user.password !== this.confirmPassword) {
-      this.errorMessage = "Passwords do not match";
-      return;
-    }
+  if (this.user.password && this.user.password !== this.confirmPassword) {
+    this.errorMessage = "Passwords do not match";
+    this.successMessage = "";
+    return;
+  }
 
-    this.errorMessage = "";
+  this.errorMessage = "";
+  this.successMessage = "";
 
-    this.service.update(this.user).subscribe((res: any) => {
+  this.service.update(this.user).subscribe({
+    next: (res: any) => {
 
       localStorage.setItem("user", JSON.stringify(res));
 
-      alert("Profile Updated Successfully");
+      this.successMessage = "Profile updated successfully";
 
-      this.router.navigate(['/catalog']);
-    });
-  }
+      setTimeout(() => {
+        this.router.navigate(['/catalog']);
+      }, 2000);
+    },
+
+    error: () => {
+      this.errorMessage = "Failed to update profile";
+    }
+  });
+}
 
   goHome() {
     this.router.navigate(['/catalog']);

@@ -1,58 +1,74 @@
-<div class="container d-flex justify-content-center mt-5">
+<div class="profile-container">
 
-  <div class="card shadow p-4" style="width: 420px; border-radius: 12px;">
+  <div class="profile-card">
 
-    <h4 class="text-center mb-4">Update Profile</h4>
+    <div class="profile-header">
+      <h3>Profile Settings</h3>
+      <p>Update your account information</p>
+    </div>
 
-    
-    <input class="form-control mb-3"
-           placeholder="Username"
-           [(ngModel)]="user.username">
+    <div class="alert alert-success" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
 
-    
-    <input class="form-control mb-3"
-           placeholder="First Name"
-           [(ngModel)]="user.firstName">
-
-    
-    <input class="form-control mb-3"
-           placeholder="Last Name"
-           [(ngModel)]="user.lastName">
-
-
-    <input class="form-control mb-3"
-           placeholder="Address"
-           [(ngModel)]="user.address">
-
-    
-    <input class="form-control mb-3"
-           placeholder="Phone Number"
-           [(ngModel)]="user.phoneNumber">
-
-    
-    <input type="password"
-           class="form-control mb-3"
-           placeholder="New Password"
-           [(ngModel)]="user.password">
-
-    
-    <input type="password"
-           class="form-control mb-3"
-           placeholder="Confirm Password"
-           [(ngModel)]="confirmPassword">
-
-    
-    <div class="alert alert-danger py-2" *ngIf="errorMessage">
+    <div class="alert alert-danger" *ngIf="errorMessage">
       {{ errorMessage }}
     </div>
 
-    
-    <div class="d-grid gap-2 mt-3">
-      <button class="btn btn-primary" (click)="update()">
+    <div class="form-group">
+      <label>Username</label>
+      <input class="form-control"
+             [(ngModel)]="user.username">
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <label>First Name</label>
+        <input class="form-control"
+               [(ngModel)]="user.firstName">
+      </div>
+
+      <div class="col">
+        <label>Last Name</label>
+        <input class="form-control"
+               [(ngModel)]="user.lastName">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Address</label>
+      <input class="form-control"
+             [(ngModel)]="user.address">
+    </div>
+
+    <div class="form-group">
+      <label>Phone</label>
+      <input class="form-control"
+             [(ngModel)]="user.phoneNumber">
+    </div>
+
+    <div class="form-group">
+      <label>New Password</label>
+      <input type="password"
+             class="form-control"
+             [(ngModel)]="user.password">
+    </div>
+
+    <div class="form-group">
+      <label>Confirm Password</label>
+      <input type="password"
+             class="form-control"
+             [(ngModel)]="confirmPassword">
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-primary save-btn"
+              (click)="update()">
         Save Changes
       </button>
 
-      <button class="btn btn-outline-secondary" (click)="goHome()">
+      <button class="btn btn-light back-btn"
+              (click)="goHome()">
         Back
       </button>
     </div>

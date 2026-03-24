@@ -30,14 +30,16 @@ export class ProductCatalogComponent implements OnInit {
     private cartService: CartService,
     private cdr: ChangeDetectorRef,
     private router: Router
-  ) {}
+  ) {
+     this.loadCartCount();
+  }
 
   ngOnInit() {
-    this.loadProducts();
-    this.loadUser();
-    this.loadCartCount();
-    this.loadCategories();
-  }
+  this.loadUser();
+  this.loadCategories();
+  this.loadProducts();
+  this.loadCartCount();
+}
 loadCategories() {
   this.productService.getCategories().subscribe({
     next: (res) => {
@@ -96,14 +98,22 @@ loadCategories() {
   }
 
   
+loadCartCount() {
+  const user = JSON.parse(localStorage.getItem("user") || '{}');
 
-  loadCartCount() {
-    let user = JSON.parse(localStorage.getItem("user")!);
+  if (!user?.id) return;
 
-    this.cartService.getCart(user.id)
-      .subscribe(res => this.cartCount = res.length);
-  }
-
+  this.cartService.getCart(user.id)
+    .subscribe({
+      next: (res) => {
+        this.cartCount = res?.length || 0;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.cartCount = 0;
+      }
+    });
+}
   addToCart(product: any) {
 
     let user = JSON.parse(localStorage.getItem("user")!);
