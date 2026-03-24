@@ -3,8 +3,15 @@ node_modules/
 dist/
 target/
 *.log
+
 .vscode/
 .idea/
+
 frontend/.angular/
 frontend/node_modules/
 frontend/dist/
+
+backend/**/target/
+backend/**/.classpath
+backend/**/.project
+backend/**/.settings/
