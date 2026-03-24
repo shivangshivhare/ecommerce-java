@@ -80,7 +80,7 @@
   color: green;
 }
 
-/* Loader */
+
 .loader {
   width: 18px;
   height: 18px;
@@ -95,7 +95,7 @@
   to { transform: rotate(360deg); }
 }
 
-/* Animation */
+
 .fade-in {
   animation: fadeIn 0.3s ease-in;
 }

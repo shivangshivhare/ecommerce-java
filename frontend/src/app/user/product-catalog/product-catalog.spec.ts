@@ -9,12 +9,12 @@ describe('ProductCatalogComponent', () => {
 
   beforeEach(() => {
 
-    // ✅ Mock user for localStorage (fix null id error)
+    
     localStorage.setItem('user', JSON.stringify({ id: 1 }));
 
     TestBed.configureTestingModule({
       imports: [ProductCatalogComponent],
-      providers: [provideHttpClientTesting()] // ✅ prevent real API calls
+      providers: [provideHttpClientTesting()] 
     });
 
     fixture = TestBed.createComponent(ProductCatalogComponent);

@@ -24,14 +24,25 @@ public class CartController {
     @PostMapping("/addProd")
     public Cart add(@RequestBody Cart cart) {
 
-        Cart existing = repo.findByUserIdAndProductId(
-            cart.getUserId(), cart.getProductId()
-        );
+        Cart existing =
+            repo.findByUserIdAndProductId(
+                cart.getUserId(),
+                cart.getProductId()
+            );
 
         if (existing != null) {
-        	existing.setQuantity(existing.getQuantity() + cart.getQuantity());
+            existing.setQuantity(
+                existing.getQuantity() + cart.getQuantity()
+            );
             return repo.save(existing);
         }
+
+        ProductDTO product =
+            productClient.getProduct(cart.getProductId());
+
+        cart.setName(product.getName());
+        cart.setImage(product.getImageUrl());
+        cart.setPrice(product.getPrice());
 
         return repo.save(cart);
     }

@@ -11,7 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
+import jakarta.persistence.FetchType;
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -32,9 +32,12 @@ public class Order {
     public void setOrderTime(LocalDateTime orderTime) {
         this.orderTime = orderTime;
     }
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "order_id")
-    private List<OrderItem> items;
+    @OneToMany(
+    	    cascade = CascadeType.ALL,
+    	    fetch = FetchType.EAGER
+    	)
+    	@JoinColumn(name = "order_id")
+    	private List<OrderItem> items;
 	public Long getId() {
 		return id;
 	}

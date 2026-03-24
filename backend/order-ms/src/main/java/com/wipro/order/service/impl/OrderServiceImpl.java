@@ -1,18 +1,25 @@
 package com.wipro.order.service.impl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.wipro.order.dto.*;
-import com.wipro.order.entity.*;
-import com.wipro.order.repo.*;
+import com.wipro.order.dto.OrderRequestDTO;
+import com.wipro.order.dto.OrderResponseDTO;
+
+import com.wipro.order.entity.Cart;
+import com.wipro.order.entity.Order;
+import com.wipro.order.entity.OrderItem;
+
+import com.wipro.order.repo.CartRepo;
+import com.wipro.order.repo.OrderRepo;
+
 import com.wipro.order.service.OrderService;
+import com.wipro.order.kafka.OrderProducer;
 
 import jakarta.transaction.Transactional;
-
-import com.wipro.order.kafka.OrderProducer;
-import com.wipro.order.feign.ProductClient;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -26,8 +33,6 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderProducer producer;
 
-    @Autowired
-    private ProductClient productClient;
     @Transactional
     @Override
     public OrderResponseDTO createOrder(OrderRequestDTO request) {
@@ -40,59 +45,46 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("Cart is empty");
         }
 
+        Order order = new Order();
+
+        order.setUserId(userId);
+        order.setStatus("PROCESSING");
+        order.setOrderTime(java.time.LocalDateTime.now());
+
         List<OrderItem> items = new ArrayList<>();
         double total = 0;
 
         for (Cart c : cartItems) {
 
-            ProductDTO product = productClient.getProduct(c.getProductId());
-
-            if (product == null) {
-                throw new RuntimeException("Product not found");
-            }
-
-            // 🔥 STOCK VALIDATION
-            if (product.getQuantity() < c.getQuantity()) {
-                throw new RuntimeException("Insufficient stock for " + product.getName());
-            }
-
-            // 🔥 REDUCE STOCK
-            product.setQuantity(product.getQuantity() - c.getQuantity());
-
-            // 🔥 CALL PRODUCT SERVICE (VERY IMPORTANT)
-            productClient.updateProduct(product.getId(), product);
-
             OrderItem item = new OrderItem();
 
             item.setProductId(c.getProductId());
             item.setQuantity(c.getQuantity());
-            item.setPrice(product.getPrice());
-            item.setImage(product.getImageUrl());
-            item.setName(product.getName());
+            item.setPrice(c.getPrice());
+            item.setName(c.getName());
+            item.setImage(c.getImage());
 
-            total += product.getPrice() * c.getQuantity();
+      
+
+            total += c.getPrice() * c.getQuantity();
 
             items.add(item);
         }
 
-        Order order = new Order();
-
-        order.setUserId(userId);
         order.setItems(items);
         order.setTotalAmount(total);
-        order.setStatus("CREATED");
-        order.setOrderTime(java.time.LocalDateTime.now());
 
         Order saved = orderRepo.save(order);
 
-        // 🔥 SEND KAFKA EVENT
-        producer.sendOrderEvent(saved);
-
-        // 🔥 CLEAR CART
+       
         cartRepo.deleteByUserId(userId);
+
+        // kafka sending 
+        producer.sendOrder(saved);
 
         return mapToDTO(saved);
     }
+
     @Override
     public List<OrderResponseDTO> getAll() {
 
@@ -106,18 +98,6 @@ public class OrderServiceImpl implements OrderService {
         return response;
     }
 
-    public OrderResponseDTO mapToDTO(Order order) {
-
-        OrderResponseDTO dto = new OrderResponseDTO();
-
-        dto.setId(order.getId());
-        dto.setUserId(order.getUserId());
-        dto.setTotalAmount(order.getTotalAmount());
-        dto.setStatus(order.getStatus());
-        dto.setItems(order.getItems());
-
-        return dto;
-    }
     @Override
     public List<OrderResponseDTO> getOrdersByUser(Long userId) {
 
@@ -131,25 +111,29 @@ public class OrderServiceImpl implements OrderService {
 
         return response;
     }
+
     @Transactional
- 
+    @Override
     public void cancelOrder(Long orderId) {
 
         Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        String status = order.getStatus();
-
-    
-        if (status.equalsIgnoreCase("CANCELLED")) {
-            return;
-        }
-
-        if (status.equalsIgnoreCase("COMPLETED") || status.equalsIgnoreCase("DELIVERED")) {
-            throw new RuntimeException("Cannot cancel completed order");
-        }
-
         order.setStatus("CANCELLED");
+
         orderRepo.save(order);
+    }
+
+    private OrderResponseDTO mapToDTO(Order order) {
+
+        OrderResponseDTO dto = new OrderResponseDTO();
+
+        dto.setId(order.getId());
+        dto.setUserId(order.getUserId());
+        dto.setTotalAmount(order.getTotalAmount());
+        dto.setStatus(order.getStatus());
+        dto.setItems(order.getItems());
+
+        return dto;
     }
 }

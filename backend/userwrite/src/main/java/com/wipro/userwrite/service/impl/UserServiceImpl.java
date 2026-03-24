@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User save(User user) {
 
-        // hash password
+        // here hash password
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
         user.setPassword(hashedPassword);
 

@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class EditProductComponent implements OnInit {
 
-  categories: string[] = [];   // ✅ dynamic
+  categories: string[] = [];   
   product: any = {};
   username = '';
 

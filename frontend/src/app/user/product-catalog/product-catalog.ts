@@ -57,7 +57,7 @@ loadCategories() {
       || 'User';
   }
 
-  // ================= PRODUCTS =================
+  
 
   loadProducts() {
     this.productService.getAll().subscribe((res: any[]) => {
@@ -95,7 +95,7 @@ loadCategories() {
     );
   }
 
-  // ================= CART =================
+  
 
   loadCartCount() {
     let user = JSON.parse(localStorage.getItem("user")!);
@@ -140,7 +140,7 @@ loadCategories() {
     });
   }
 
-  // ================= NAVIGATION =================
+  
 
   goToCart() { this.router.navigate(['/cart']); }
   goToOrders() { this.router.navigate(['/orders']); }

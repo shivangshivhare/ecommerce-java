@@ -11,7 +11,4 @@ public interface ProductClient {
     @GetMapping("/product/{id}")
     ProductDTO getProduct(@PathVariable Long id);
 
-    // for stock redude
-    @PutMapping("/product/{id}")
-    void updateProduct(@PathVariable Long id, @RequestBody ProductDTO product);
 }

@@ -101,7 +101,7 @@
           </div>
 
           <button 
-            *ngIf="order.status !== 'COMPLETED' && order.status !== 'CANCELLED'"
+            *ngIf="order.status !== 'PENDING' && order.status !== 'CREATED'"
             class="btn btn-sm btn-outline-danger"
             (click)="openCancelModal(order)"
           >

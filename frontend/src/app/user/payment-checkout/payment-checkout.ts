@@ -78,7 +78,7 @@ goBack() {
 
         this.cdr.detectChanges();
 
-        // redirect to orders
+        
         setTimeout(() => {
           this.router.navigate(['/orders']);
         }, 1000);

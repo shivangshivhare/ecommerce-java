@@ -25,7 +25,7 @@ public class SecurityConfig {
                         "/swagger-ui.html"
                 ).permitAll()
 
-                // allow everything else
+                
                 .anyRequest().permitAll()
             )
             .formLogin(form -> form.disable())

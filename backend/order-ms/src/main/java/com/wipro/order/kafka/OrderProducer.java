@@ -1,17 +1,22 @@
 package com.wipro.order.kafka;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.wipro.order.entity.Order;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import com.wipro.order.entity.Order;
 
 @Service
 public class OrderProducer {
 
-    @Autowired
-    private KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, Order> kafkaTemplate;
 
-    public void sendOrderEvent(Order order) {
+    public OrderProducer(KafkaTemplate<String, Order> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+    }
+
+    public void sendOrder(Order order) {
+
         kafkaTemplate.send("order-created", order);
+
+        System.out.println("Order sent to Kafka: " + order.getId());
     }
 }

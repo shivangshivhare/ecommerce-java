@@ -46,7 +46,7 @@ export class ProductListComponent implements OnInit {
     if (user) this.username = user;
   }
 
-  // LOAD PRODUCTS
+  
   loadProducts() {
     this.service.getAll().subscribe({
       next: (res) => {
@@ -61,7 +61,7 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-  // LOAD CATEGORIES FROM BACKEND
+  
   loadCategories() {
     this.service.getCategories().subscribe({
       next: (res) => {
@@ -97,7 +97,7 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-  // FIXED SEARCH
+  
   search() {
     const text = this.searchText.toLowerCase();
 
@@ -118,7 +118,7 @@ export class ProductListComponent implements OnInit {
     this.page = 1;
   }
 
-  // SORT
+  
   sort(field: string) {
     if (this.sortField === field) {
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';

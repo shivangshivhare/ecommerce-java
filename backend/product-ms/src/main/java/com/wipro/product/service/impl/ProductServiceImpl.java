@@ -121,4 +121,27 @@ public class ProductServiceImpl implements ProductService {
     public List<String> getCategories() {
         return repo.findDistinctCategories();
     }
+    @Override
+    public void reduceQuantity(Long productId, int quantity) {
+
+        Optional<Product> optional = repo.findById(productId);
+
+        if (optional.isPresent()) {
+
+            Product product = optional.get();
+
+            if (product.getQuantity() < quantity) {
+                throw new RuntimeException("Insufficient stock");
+            }
+
+            product.setQuantity(
+                    product.getQuantity() - quantity
+            );
+
+            repo.save(product);
+
+        } else {
+            throw new RuntimeException("Product not found");
+        }
+    }
 }

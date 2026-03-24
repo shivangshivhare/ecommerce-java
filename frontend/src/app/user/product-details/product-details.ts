@@ -24,7 +24,7 @@ export class ProductDetailComponent implements OnInit {
   message: string = '';
   messageType: string = '';
 
-  // ✅ ADDED
+  
   searchTerm: string = '';
 
   constructor(
@@ -185,7 +185,7 @@ export class ProductDetailComponent implements OnInit {
     });
   }
 
-  // ✅ ADDED SEARCH FUNCTION
+  
   searchProduct() {
     if (!this.searchTerm || this.searchTerm.trim() === '') return;
 
