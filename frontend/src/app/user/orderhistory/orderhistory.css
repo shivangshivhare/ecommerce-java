@@ -1,19 +1,152 @@
-.navbar {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+.order-page{
+max-width:900px;
 }
 
-.navbar .form-control:focus {
-  box-shadow: none;
-  border-color: #ffc107;
+.order-card{
+border:none;
+border-radius:14px;
+overflow:hidden;
+transition:0.2s ease;
+box-shadow:0 3px 12px rgba(0,0,0,0.06);
 }
 
-.dropdown-menu {
-  min-width: 150px;
-  border-radius: 8px;
+.order-card:hover{
+transform:translateY(-2px);
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
 }
 
-.dropdown-item:hover {
-  background-color: #f8f9fa;
+.order-header{
+background:#f8f9fa;
+padding:14px 18px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:1px solid #eee;
+}
+
+
+
+
+.order-status{
+padding:6px 14px;
+border-radius:20px;
+font-size:12px;
+font-weight:500;
+}
+
+.status-pending{
+background:#fff3cd;
+color:#856404;
+}
+
+.status-success{
+background:#d4edda;
+color:#155724;
+}
+
+.status-failed{
+background:#f8d7da;
+color:#721c24;
+}
+
+
+.search-center {
+  width: 320px;
+}
+
+.search-box {
+  border-radius: 20px;
+  padding-left: 15px;
+}
+
+.track-btn {
+  border-radius: 20px;
+  padding: 4px 14px;
+}
+
+.cancel-btn {
+  border-radius: 20px;
+  padding: 4px 14px;
+}
+
+.order-item{
+display:flex;
+align-items:center;
+padding:14px 0;
+border-bottom:1px solid #f1f1f1;
+}
+
+.order-item:last-child{
+border-bottom:none;
+}
+
+.image-box{
+width:65px;
+height:55px;
+background:#f8f9fa;
+border-radius:10px;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.image-box img{
+max-width:90%;
+max-height:90%;
+object-fit:contain;
+}
+
+.product-name{
+font-size:14px;
+}
+
+.price{
+font-weight:600;
+}
+
+
+
+
+.order-footer{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:10px;
+padding-top:15px;
+border-top:1px solid #eee;
+}
+
+.total{
+font-weight:500;
+}
+
+.total span{
+font-weight:700;
+color:#198754;
+margin-left:5px;
+}
+
+
+
+
+.user-badge{
+background:#111;
+padding:8px 14px;
+border-radius:20px;
+cursor:pointer;
+font-weight:500;
+}
+
+
+
+.cancel-btn{
+border-radius:20px;
+padding:4px 14px;
+}
+
+
+
+
+.modal-modern{
+border-radius:14px;
 }

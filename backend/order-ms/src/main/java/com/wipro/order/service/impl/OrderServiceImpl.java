@@ -1,5 +1,6 @@
 package com.wipro.order.service.impl;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,8 +34,13 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderProducer producer;
 
-    @Transactional
+
+    @CircuitBreaker(
+            name = "productService",
+            fallbackMethod = "fallbackOrder"
+    )
     @Override
+    @Transactional
     public OrderResponseDTO createOrder(OrderRequestDTO request) {
 
         Long userId = request.getUserId();
@@ -64,8 +70,6 @@ public class OrderServiceImpl implements OrderService {
             item.setName(c.getName());
             item.setImage(c.getImage());
 
-      
-
             total += c.getPrice() * c.getQuantity();
 
             items.add(item);
@@ -76,13 +80,28 @@ public class OrderServiceImpl implements OrderService {
 
         Order saved = orderRepo.save(order);
 
-       
+        // clear cart
         cartRepo.deleteByUserId(userId);
 
-        // kafka sending 
+        // kafka sending
         producer.sendOrder(saved);
 
         return mapToDTO(saved);
+    }
+
+
+    // Circuit Breaker Fallback
+    public OrderResponseDTO fallbackOrder(
+            OrderRequestDTO request,
+            Exception ex
+    ) {
+
+        OrderResponseDTO dto = new OrderResponseDTO();
+
+        dto.setStatus("FAILED");
+        dto.setMessage("Product service unavailable or insufficient inventory");
+
+        return dto;
     }
 
     @Override
@@ -98,6 +117,7 @@ public class OrderServiceImpl implements OrderService {
         return response;
     }
 
+
     @Override
     public List<OrderResponseDTO> getOrdersByUser(Long userId) {
 
@@ -112,6 +132,7 @@ public class OrderServiceImpl implements OrderService {
         return response;
     }
 
+
     @Transactional
     @Override
     public void cancelOrder(Long orderId) {
@@ -123,6 +144,7 @@ public class OrderServiceImpl implements OrderService {
 
         orderRepo.save(order);
     }
+
 
     private OrderResponseDTO mapToDTO(Order order) {
 

@@ -2,16 +2,18 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-order-history',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './orderhistory.html',
   styleUrls: ['./orderhistory.css']
 })
 export class OrderHistoryComponent implements OnInit {
-
+  searchText: string = '';
+  allOrders: any[] = [];
   orders: any[] = [];
   username: string = '';
   isLoading: boolean = true;
@@ -40,12 +42,14 @@ export class OrderHistoryComponent implements OnInit {
     this.http.get<any[]>(`http://localhost:8080/order/user/${user.id}`)
       .subscribe({
         next: (res) => {
-          this.orders = (res || []).map(order => ({
-            ...order,
-            items: order.items || [],
-            totalAmount: order.totalAmount || order.total || 0,
-            status: (order.status || '').toUpperCase()
-          }));
+          this.allOrders = (res || []).map(order => ({
+  ...order,
+  items: order.items || [],
+  totalAmount: order.totalAmount || order.total || 0,
+  status: (order.status || '').toUpperCase()
+}));
+
+this.orders = [...this.allOrders];
 
           this.isLoading = false;
           this.cdr.detectChanges(); 
@@ -131,4 +135,23 @@ export class OrderHistoryComponent implements OnInit {
   goToOrders() {
     this.router.navigate(['/orders']);
   }
+  filterOrders() {
+
+  const search = this.searchText.toLowerCase();
+
+  this.orders = this.allOrders.filter(order => {
+
+    const orderId = order.id?.toString().includes(search);
+
+    const status = order.status?.toLowerCase().includes(search);
+
+    const product = order.items?.some((item: any) =>
+      item.name?.toLowerCase().includes(search)
+    );
+
+    return orderId || status || product;
+
+  });
+
+}
 }
