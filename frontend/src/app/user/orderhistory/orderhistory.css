@@ -1,0 +1,19 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar .form-control:focus {
+  box-shadow: none;
+  border-color: #ffc107;
+}
+
+.dropdown-menu {
+  min-width: 150px;
+  border-radius: 8px;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}

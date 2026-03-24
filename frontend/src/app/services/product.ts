@@ -18,8 +18,8 @@ export class ProductService {private baseUrl = "http://localhost:8080/product";
   }
 
   update(product: any) {
-    return this.http.put(this.baseUrl, product);
-  }
+  return this.http.put(`${this.baseUrl}/${product.id}`, product);
+}
 
   delete(id: number) {
     return this.http.delete(`${this.baseUrl}/${id}`);

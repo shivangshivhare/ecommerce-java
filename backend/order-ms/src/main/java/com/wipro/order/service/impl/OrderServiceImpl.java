@@ -132,17 +132,24 @@ public class OrderServiceImpl implements OrderService {
         return response;
     }
     @Transactional
+ 
     public void cancelOrder(Long orderId) {
 
         Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        if (!order.getStatus().equals("CREATED")) {
-            throw new RuntimeException("Cannot cancel this order");
+        String status = order.getStatus();
+
+    
+        if (status.equalsIgnoreCase("CANCELLED")) {
+            return;
+        }
+
+        if (status.equalsIgnoreCase("COMPLETED") || status.equalsIgnoreCase("DELIVERED")) {
+            throw new RuntimeException("Cannot cancel completed order");
         }
 
         order.setStatus("CANCELLED");
-
         orderRepo.save(order);
     }
 }

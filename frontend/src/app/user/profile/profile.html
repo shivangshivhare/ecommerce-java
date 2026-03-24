@@ -4,49 +4,49 @@
 
     <h4 class="text-center mb-4">Update Profile</h4>
 
-    <!-- Username -->
+    
     <input class="form-control mb-3"
            placeholder="Username"
            [(ngModel)]="user.username">
 
-    <!-- First Name -->
+    
     <input class="form-control mb-3"
            placeholder="First Name"
            [(ngModel)]="user.firstName">
 
-    <!-- Last Name -->
+    
     <input class="form-control mb-3"
            placeholder="Last Name"
            [(ngModel)]="user.lastName">
 
-    <!-- Address -->
+
     <input class="form-control mb-3"
            placeholder="Address"
            [(ngModel)]="user.address">
 
-    <!-- Phone -->
+    
     <input class="form-control mb-3"
            placeholder="Phone Number"
            [(ngModel)]="user.phoneNumber">
 
-    <!-- Password -->
+    
     <input type="password"
            class="form-control mb-3"
            placeholder="New Password"
            [(ngModel)]="user.password">
 
-    <!-- Confirm Password -->
+    
     <input type="password"
            class="form-control mb-3"
            placeholder="Confirm Password"
            [(ngModel)]="confirmPassword">
 
-    <!-- Error -->
+    
     <div class="alert alert-danger py-2" *ngIf="errorMessage">
       {{ errorMessage }}
     </div>
 
-    <!-- Buttons -->
+    
     <div class="d-grid gap-2 mt-3">
       <button class="btn btn-primary" (click)="update()">
         Save Changes

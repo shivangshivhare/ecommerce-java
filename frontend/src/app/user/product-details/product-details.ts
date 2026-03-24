@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../services/product';
+import { CartService } from '../../services/cart-service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -23,9 +24,13 @@ export class ProductDetailComponent implements OnInit {
   message: string = '';
   messageType: string = '';
 
+  // ✅ ADDED
+  searchTerm: string = '';
+
   constructor(
     private route: ActivatedRoute,
     private service: ProductService,
+    private cartService: CartService,   
     public router: Router,
     private cdr: ChangeDetectorRef
   ) {}
@@ -55,8 +60,20 @@ export class ProductDetailComponent implements OnInit {
   }
 
   loadCartCount() {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    this.cartCount = cart.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0);
+    let user = JSON.parse(localStorage.getItem("user")!);
+
+    if (!user?.id) return;
+
+    this.cartService.getCart(user.id)
+      .subscribe({
+        next: (res) => {
+          this.cartCount = res.length;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.cartCount = 0;
+        }
+      });
   }
 
   loadProduct(id: number) {
@@ -81,62 +98,99 @@ export class ProductDetailComponent implements OnInit {
   }
 
   checkCart() {
-    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    let user = JSON.parse(localStorage.getItem("user")!);
 
-    const existing = cart.find((item: any) => item.id === this.product.id);
+    if (!user?.id) return;
 
-    if (existing) {
-      this.isInCart = true;
-      this.quantity = existing.quantity;
-    }
+    this.cartService.getCart(user.id).subscribe({
+      next: (res) => {
+        const existing = res.find((item: any) => item.productId === this.product.id);
+
+        if (existing) {
+          this.isInCart = true;
+          this.quantity = existing.quantity;
+        }
+      }
+    });
   }
 
   addToCart() {
-    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    let user = JSON.parse(localStorage.getItem("user")!);
 
-    const existing = cart.find((item: any) => item.id === this.product.id);
+    let cartItem = {
+      userId: user.id,
+      productId: this.product.id,
+      name: this.product.name,
+      image: this.product.imageUrl,
+      price: this.product.price,
+      quantity: this.quantity
+    };
 
-    if (existing) {
-      existing.quantity += this.quantity;
-    } else {
-      cart.push({
-        ...this.product,
-        quantity: this.quantity
-      });
-    }
-
-    localStorage.setItem('cart', JSON.stringify(cart));
-    this.loadCartCount();
-    this.isInCart = true;
-
-    this.showMessage('Added to cart successfully', 'success');
+    this.cartService.addToCart(cartItem).subscribe(() => {
+      this.loadCartCount();
+      this.isInCart = true;
+      this.showMessage('Added to cart successfully', 'success');
+    });
   }
 
   updateCart() {
-    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    let user = JSON.parse(localStorage.getItem("user")!);
 
-    const index = cart.findIndex((item: any) => item.id === this.product.id);
+    this.cartService.getCart(user.id).subscribe(res => {
 
-    if (index !== -1) {
-      cart[index].quantity = this.quantity;
-      localStorage.setItem('cart', JSON.stringify(cart));
-      this.loadCartCount();
+      let existing = res.find((item: any) => item.productId === this.product.id);
 
-      this.showMessage('Cart updated', 'info');
-    }
+      if (existing) {
+        this.cartService.updateQty(existing.id, this.quantity)
+          .subscribe(() => {
+            this.loadCartCount();
+            this.showMessage('Cart updated', 'info');
+          });
+      }
+    });
   }
 
   removeFromCart() {
-    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    let user = JSON.parse(localStorage.getItem("user")!);
 
-    cart = cart.filter((item: any) => item.id !== this.product.id);
+    this.cartService.getCart(user.id).subscribe(res => {
 
-    localStorage.setItem('cart', JSON.stringify(cart));
-    this.loadCartCount();
+      let existing = res.find((item: any) => item.productId === this.product.id);
 
-    this.isInCart = false;
+      if (existing) {
+        this.cartService.deleteItem(existing.id).subscribe(() => {
+          this.loadCartCount();
+          this.isInCart = false;
+          this.showMessage('Removed from cart', 'danger');
+        });
+      }
+    });
+  }
 
-    this.showMessage('Removed from cart', 'danger');
+  buyNow() {
+    let user = JSON.parse(localStorage.getItem("user")!);
+
+    let cartItem = {
+      userId: user.id,
+      productId: this.product.id,
+      name: this.product.name,
+      image: this.product.imageUrl,
+      price: this.product.price,
+      quantity: this.quantity
+    };
+
+    this.cartService.addToCart(cartItem).subscribe(() => {
+      this.loadCartCount();
+      this.router.navigate(['/checkout']);
+    });
+  }
+
+  // ✅ ADDED SEARCH FUNCTION
+  searchProduct() {
+    if (!this.searchTerm || this.searchTerm.trim() === '') return;
+
+    localStorage.setItem('searchText', this.searchTerm);
+    this.router.navigate(['/catalog']);
   }
 
   showMessage(msg: string, type: string) {
@@ -148,32 +202,12 @@ export class ProductDetailComponent implements OnInit {
     }, 3000);
   }
 
-  goToCart() {
-    this.router.navigate(['/cart']);
+  goToCart() { this.router.navigate(['/cart']); }
+  goToOrders() { this.router.navigate(['/orders']); }
+  goToCatalog() { this.router.navigate(['/catalog']); }
+
+  logout() {
+    localStorage.clear();
+    this.router.navigate(['/login']);
   }
-
-  goToOrders() {
-    this.router.navigate(['/orders']);
-  }
-  buyNow() {
-  let order = {
-    productId: this.product.id,
-    name: this.product.name,
-    price: this.product.price,
-    quantity: this.quantity,
-    totalAmount: this.product.price * this.quantity,
-    orderTime: new Date(),
-    status: "CONFIRMED"
-  };
-
-  localStorage.setItem('order', JSON.stringify(order));
-
-
-  setTimeout(() => {
-    this.router.navigate(['/checkout']);
-  }, 1000);
-}
-goToCatalog() {
-  this.router.navigate(['/catalog']);
-}
 }

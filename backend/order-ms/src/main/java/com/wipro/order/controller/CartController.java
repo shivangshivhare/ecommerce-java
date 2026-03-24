@@ -29,7 +29,7 @@ public class CartController {
         );
 
         if (existing != null) {
-            existing.setQuantity(existing.getQuantity() + 1);
+        	existing.setQuantity(existing.getQuantity() + cart.getQuantity());
             return repo.save(existing);
         }
 

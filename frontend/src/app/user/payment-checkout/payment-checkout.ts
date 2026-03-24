@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-payment-checkout',
   standalone: true,
@@ -22,13 +22,16 @@ export class PaymentCheckoutComponent implements OnInit {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private location: Location
   ) {}
 
   ngOnInit() {
     this.loadCart();
   }
-
+goBack() {
+  this.location.back();
+}
   
   loadCart() {
     let user = JSON.parse(localStorage.getItem("user")!);

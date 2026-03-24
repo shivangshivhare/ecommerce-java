@@ -1,0 +1,28 @@
+
+.login-container {
+  background: linear-gradient(to right, #f8f9fa, #eef2f7);
+}
+
+
+.login-card {
+  width: 400px;
+  border-radius: 16px;
+  transition: 0.3s ease;
+}
+
+
+
+.login-image {
+  max-width: 90%;
+  height: auto;
+  object-fit: contain;
+}
+
+.btn-primary {
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #0b5ed7;
+}

@@ -1,13 +1,13 @@
 <div class="container mt-3">
 
-  <!-- HEADER -->
+  
   <div class="d-flex justify-content-between align-items-center mb-3">
     <button class="btn btn-outline-secondary btn-sm" (click)="goBack()">← Back</button>
     <h5 class="mb-0">Shopping Cart</h5>
     <span>Welcome, {{ username }}</span>
   </div>
 
-  <!-- EMPTY CART -->
+
   <div *ngIf="cartItems.length === 0" class="text-center mt-5">
     <h6 class="text-muted">Your cart is empty</h6>
   </div>
@@ -16,7 +16,7 @@
 
   <div class="d-flex align-items-center">
 
-    <!-- IMAGE -->
+    
     <div style="width: 80px;">
       <img 
         [src]="item.image ? item.image : 'assets/no-image.png'" 
@@ -25,14 +25,14 @@
       />
     </div>
 
-    <!-- DETAILS -->
+    
     <div class="flex-grow-1 ms-3">
       <h6 class="mb-1">{{ item.name }}</h6>
       <p class="text-muted mb-1">₹{{ item.price }}</p>
       <small class="text-success">In Stock</small>
     </div>
 
-    <!-- QUANTITY -->
+    
     <div class="d-flex align-items-center me-2">
       <button class="btn btn-sm btn-outline-secondary" (click)="decreaseQty(item)">-</button>
       <span class="px-2">{{ item.quantity }}</span>
@@ -47,7 +47,7 @@
 
 </div>
 
-  <!-- TOTAL SECTION -->
+  
   <div class="card p-3 mt-3 shadow-sm">
 
     <div class="d-flex justify-content-between">

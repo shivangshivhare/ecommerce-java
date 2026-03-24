@@ -35,9 +35,9 @@ export class OrderHistoryComponent implements OnInit {
     const user = JSON.parse(localStorage.getItem("user") || '{}');
 
     this.isLoading = true;
-    this.cdr.detectChanges(); // show loading immediately
+    this.cdr.detectChanges(); 
 
-    this.http.get<any[]>(`http://localhost:8080/order/${user.id}`)
+    this.http.get<any[]>(`http://localhost:8080/order/user/${user.id}`)
       .subscribe({
         next: (res) => {
           this.orders = (res || []).map(order => ({
@@ -48,7 +48,7 @@ export class OrderHistoryComponent implements OnInit {
           }));
 
           this.isLoading = false;
-          this.cdr.detectChanges(); // refresh UI
+          this.cdr.detectChanges(); 
         },
         error: (err) => {
           console.error(err);
@@ -70,8 +70,14 @@ export class OrderHistoryComponent implements OnInit {
   }
 
   confirmCancel() {
+
   if (!this.selectedOrder || !this.selectedOrder.id) {
     this.message = 'Invalid order selected';
+    return;
+  }
+
+  if (this.selectedOrder.status === 'CANCELLED') {
+    this.message = 'Order already cancelled';
     return;
   }
 
@@ -80,22 +86,25 @@ export class OrderHistoryComponent implements OnInit {
   this.isCancelling = true;
   this.cdr.detectChanges();
 
-  this.http.put(`http://localhost:8080/order/cancel/${orderId}`, {})
-    .subscribe({
-      next: () => {
-        this.message = 'Order cancelled successfully';
-        this.isCancelling = false;
-        this.closeModal();
-        this.loadOrders();
-      },
-      error: (err) => {
-        console.error(err);
-        this.message = err?.error?.message || 'Failed to cancel order';
-        this.isCancelling = false;
-        this.closeModal();
-        this.cdr.detectChanges();
-      }
-    });
+  this.http.put(
+    `http://localhost:8080/order/cancel/${orderId}`,
+    {},
+    { responseType: 'text' }   
+  ).subscribe({
+    next: (res: any) => {
+      this.message = res || 'Order cancelled successfully';
+      this.isCancelling = false;
+      this.closeModal();
+      this.loadOrders();
+    },
+    error: (err) => {
+      console.error(err);
+      this.message = err?.error || 'Failed to cancel order';
+      this.isCancelling = false;
+      this.closeModal();
+      this.cdr.detectChanges();
+    }
+  });
 }
 
   onImageError(event: any) {

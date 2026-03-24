@@ -9,19 +9,19 @@
 
     <div class="d-flex mx-auto" style="width: 50%; gap:10px;">
 
-      <select class="form-select w-25">
-        <option value="">All</option>
-        <option value="Kitchen">Kitchen</option>
-        <option value="Skincare">Skincare</option>
-        <option value="Electronics">Electronics</option>
-        <option value="Laptop">Laptop</option>
-      </select>
+  <input 
+    class="form-control"
+    placeholder="Search..."
+    [(ngModel)]="searchTerm"
+    (keyup.enter)="searchProduct()">
 
-      <input class="form-control" placeholder="Search...">
+  <button 
+    class="btn btn-outline-light"
+    (click)="searchProduct()">
+    Search
+  </button>
 
-      <button class="btn btn-outline-light">Search</button>
-
-    </div>
+</div>
 
     <div class="d-flex align-items-center gap-3">
 
