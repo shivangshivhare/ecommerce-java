@@ -25,7 +25,7 @@ public class UserController {
         this.service = service;
     }
 
-    // REGISTER USER
+    
     @Operation(summary = "Register new user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User registered successfully"),
@@ -37,7 +37,7 @@ public class UserController {
         return service.save(user);
     }
 
-    // LOGIN
+    
     @Operation(summary = "User login")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Login successful"),
@@ -56,7 +56,7 @@ public class UserController {
         return ResponseEntity.ok(loggedUser);
     }
 
-    // UPDATE
+    
     @Operation(summary = "Update user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User updated"),
@@ -74,7 +74,7 @@ public class UserController {
         return updated;
     }
 
-    // GET BY ID
+    
     @Operation(summary = "Get user by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User found"),
@@ -92,7 +92,7 @@ public class UserController {
         return user;
     }
 
-    // GET ALL USERS
+    
     @Operation(summary = "Get all users")
     @ApiResponse(responseCode = "200", description = "Users fetched successfully")
     @GetMapping
@@ -100,7 +100,7 @@ public class UserController {
         return service.getAll();
     }
 
-    // DELETE
+    
     @Operation(summary = "Delete user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User deleted"),

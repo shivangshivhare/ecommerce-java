@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
     @CircuitBreaker(name = CB_NAME, fallbackMethod = "fallbackUser")
     public User getById(Long id) {
 
-        if (id == 99) {
+        if (id == 999) {
             throw new RuntimeException("Service Down");
         }
 
